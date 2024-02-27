@@ -286,8 +286,7 @@ svg {
 .home-education {
     font-size: var(--bigger-font-size);
 }
-.home-title span,
-.home-subtitle span,
+span,
 .home-title {
     color: var(--first-color);
 }
