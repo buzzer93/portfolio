@@ -9,7 +9,7 @@
     /*Color mode HSL(hue, saturation, lightness)*/
     /* 
       Change favorite color
-      original cyan: hsl(162, 100%, 40%)
+      original cyan: hsl(170, 100%,40%)
       zeratorgreen: hsl(121 , 94% , 61%)
       cyan : hsl(174 , 63% , 50%) - gold: hsl(46,53%,52%)
       Orange: hsl(14, 100%, 65%) - Blue: hsl(210, 100%, 70%)
@@ -21,8 +21,8 @@
       -> Copy the color mode (HSL)
   */
 
-    --hue: 210;
-    --first-color: hsl(var(--hue), 100%, 70%);
+    --hue: 170;
+    --first-color: hsl(var(--hue), 100%, 40%);
     --first-color-alt: hsl(var(--hue), 56%, 35%);
     --title-color: hsl(228, 8%, 95%);
     --text-color: hsl(228, 8%, 65%);
@@ -57,9 +57,9 @@
         --biggest-font-size: 3rem;
         --bigger-font-size: 2rem;
         --h1-font-size: 2.25rem;
-        --h2-font-size: 1.5rem;
+        --h2-font-size: 1.50rem;
         --h3-font-size: 1.25rem;
-        --normal-font-size: 1rem;
+        --normal-font-size: 1.25rem;
         --small-font-size: .875rem;
         --smaller-font-size: .813rem;
     }
