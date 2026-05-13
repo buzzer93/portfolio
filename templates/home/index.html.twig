@@ -3,12 +3,54 @@
 {% block body %}
     {% include '_partials/_nav.html.twig' %}
 
-    <main class="main">
+    <main class="main" data-controller="project-modal">
         {% include '_partials/_hero.html.twig' %}
         {% include '_partials/_about.html.twig' %}
         {% include '_partials/_skills.html.twig' %}
         {% include '_partials/_projects.html.twig' %}
         {% include '_partials/_contact.html.twig' %}
+
+        <div class="project-modal-overlay"
+             data-project-modal-target="overlay"
+             data-action="click->project-modal#closeOnOverlay">
+            <div class="project-modal-dialog">
+                <button class="project-modal-close"
+                        data-action="click->project-modal#close"
+                        aria-label="Fermer">
+                    <i class="ri-close-line"></i>
+                </button>
+
+                <div class="project-modal-carousel">
+                    <button class="carousel-btn carousel-btn--prev"
+                            data-action="click->project-modal#prev"
+                            data-project-modal-target="prevBtn"
+                            aria-label="Précédent">
+                        <i class="ri-arrow-left-s-line"></i>
+                    </button>
+                    <div class="carousel-track-wrapper">
+                        <div class="carousel-track" data-project-modal-target="slides"></div>
+                    </div>
+                    <button class="carousel-btn carousel-btn--next"
+                            data-action="click->project-modal#next"
+                            data-project-modal-target="nextBtn"
+                            aria-label="Suivant">
+                        <i class="ri-arrow-right-s-line"></i>
+                    </button>
+                    <div class="carousel-dots" data-project-modal-target="dots"></div>
+                </div>
+
+                <div class="project-modal-body">
+                    <div class="project-modal-desc-col">
+                        <h3 class="project-modal-title" data-project-modal-target="title"></h3>
+                        <p class="project-modal-description" data-project-modal-target="description"></p>
+                    </div>
+                    <div class="project-modal-tech-col">
+                        <span class="project-modal-tech-label">Stack technique</span>
+                        <div class="project-modal-tech" data-project-modal-target="tech"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     {% include '_partials/_footer.html.twig' %}

@@ -2,6 +2,12 @@
     <h2 class="section-title">Mes <span>Projets</span></h2>
     <div class="projects-container container grid">
         {% for project in projects %}
+            {% set projectInfo = {
+                title: project.title,
+                description: project.description,
+                images: project.images,
+                tech: project.tech
+            }|json_encode %}
             <article class="projects-card">
                 <img src="{{ asset('images/' ~ project.image) }}" alt="{{ project.title }}" class="projects-img" />
                 <div class="projects-modal">
@@ -16,9 +22,11 @@
                             {% endfor %}
                         </div>
                     {% endif %}
-                    <a href="{{ project.url }}" target="_blank" rel="noopener noreferrer" class="projects-button">
-                        Voir le projet <i class="ri-external-link-line"></i>
-                    </a>
+                    <button class="projects-button"
+                            data-action="project-modal#open"
+                            data-project-info="{{ projectInfo }}">
+                        Voir le projet <i class="ri-eye-line"></i>
+                    </button>
                 </div>
             </article>
         {% endfor %}

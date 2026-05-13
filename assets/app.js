@@ -1,5 +1,8 @@
 import './styles.css';
+import { startStimulusApp } from '@symfony/stimulus-bundle';
 import ScrollReveal from 'scrollreveal';
+
+startStimulusApp();
 
 /*=============== SHOW MENU ===============*/
 const navMenu = document.getElementById('nav-menu');
