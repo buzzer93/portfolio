@@ -19,36 +19,42 @@ class AppFixtures extends Fixture
             'description' => 'Application de gestion de réservations de maisons de vacances.',
             'images'      => ['PMS-itylon.png'],
             'techStack'   => ['HTML', 'CSS', 'JS', 'Chartjs', 'MySQL', 'PHP'],
+            'githubUrl'   => 'https://github.com/buzzer93/PMS-itylon',
         ],
         [
             'title'       => 'Logiciel de gestion des produits',
             'description' => "Solution Web d'inventaire et d'étiquetage de produits d'une boutique.",
             'images'      => ['inventaire.png'],
             'techStack'   => ['Symfony', 'ORM (Doctrine)', 'HTML', 'CSS', 'JS'],
+            'githubUrl'   => null,
         ],
         [
             'title'       => 'Atlantis-rp',
             'description' => 'Site pour un serveur GTA-RP.',
             'images'      => ['atlantis.png'],
             'techStack'   => ['HTML', 'CSS', 'JS'],
+            'githubUrl'   => null,
         ],
         [
             'title'       => 'Residence-Itylon',
             'description' => 'Site pour une résidence de location saisonnière.',
             'images'      => ['itylon.png'],
             'techStack'   => ['HTML', 'CSS', 'JS', 'PHP'],
+            'githubUrl'   => null,
         ],
         [
             'title'       => 'Portfolio',
             'description' => 'Mon propre Portfolio.',
             'images'      => ['portfolio.png'],
             'techStack'   => ['HTML', 'CSS', 'JS'],
+            'githubUrl'   => 'https://github.com/buzzer93/portfolio',
         ],
         [
             'title'       => "Trièves Connect'",
             'description' => "Site pour un magasin d'informatique.",
             'images'      => ['trieves.png'],
             'techStack'   => ['HTML', 'CSS', 'JS', 'PHP'],
+            'githubUrl'   => null,
         ],
     ];
 
@@ -74,6 +80,7 @@ class AppFixtures extends Fixture
             $project->setDescription($data['description']);
             $project->setImages($data['images']);
             $project->setTechStack($data['techStack']);
+            $project->setGithubUrl($data['githubUrl']);
             $project->setPosition($position);
 
             $manager->persist($project);

@@ -4,6 +4,10 @@
 {% block title %}{{ is_edit ? 'Modifier' : 'Nouveau' }} projet{% endblock %}
 {% block page_title %}{{ is_edit ? 'Modifier' : 'Nouveau' }} projet{% endblock %}
 
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+{% endblock %}
+
 {% block content %}
 {{ form_start(form, {attr: {enctype: 'multipart/form-data', class: 'form-grid'}}) }}
 
@@ -20,6 +24,12 @@
                 {{ form_label(form.description) }}
                 {{ form_widget(form.description, {attr: {class: 'form-control'}}) }}
                 {{ form_errors(form.description) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.githubUrl) }}
+                {{ form_widget(form.githubUrl, {attr: {class: 'form-control', placeholder: 'https://github.com/user/repo'}}) }}
+                {{ form_errors(form.githubUrl) }}
             </div>
 
             <div class="form-group">
@@ -40,12 +50,16 @@
 
     <div class="card">
         <h2 style="font-size:0.8125rem; font-weight:600; color:var(--title); margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.06em;">Images</h2>
+        <input type="hidden" name="image_order" id="image-order-input" value='{{ project.images|json_encode|e('html_attr') }}' />
 
         {% if is_edit and project.images|length > 0 %}
-        <p style="font-size:0.8rem; color:var(--text); margin-bottom:0.75rem;">Images actuelles — cochez pour supprimer :</p>
-        <div class="img-grid" style="margin-bottom:1.5rem;">
+        <p style="font-size:0.8rem; color:var(--text); margin-bottom:0.75rem;">Images actuelles — glissez pour réorganiser le carousel, cochez pour supprimer :</p>
+        <div class="img-grid" id="sortable-project-images" style="margin-bottom:1.5rem;">
             {% for image in project.images %}
-            <div class="img-item">
+            <div class="img-item" data-image="{{ image|e('html_attr') }}">
+                <span class="card-drag-handle" style="opacity:1; top:0.4rem; left:0.4rem;" title="Réorganiser">
+                    <i class="ri-draggable"></i>
+                </span>
                 <img src="{{ asset('images/' ~ image) }}" alt="{{ project.title }}" />
                 <label>
                     <input type="checkbox" name="delete_images[]" value="{{ image }}" />
@@ -71,4 +85,30 @@
     </div>
 
 {{ form_end(form) }}
+
+{% if is_edit and project.images|length > 0 %}
+<script>
+(() => {
+    const grid = document.getElementById('sortable-project-images');
+    const output = document.getElementById('image-order-input');
+    if (!grid || !output) return;
+
+    const syncOrder = () => {
+        const ordered = Array.from(grid.querySelectorAll('.img-item'))
+            .map((item) => item.dataset.image)
+            .filter(Boolean);
+        output.value = JSON.stringify(ordered);
+    };
+
+    Sortable.create(grid, {
+        handle: '.card-drag-handle',
+        animation: 180,
+        ghostClass: 'sortable-ghost',
+        onEnd: syncOrder,
+    });
+
+    syncOrder();
+})();
+</script>
+{% endif %}
 {% endblock %}

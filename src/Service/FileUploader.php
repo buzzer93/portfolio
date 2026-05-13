@@ -18,9 +18,14 @@ class FileUploader
 
     public function remove(string $targetDirectory, string $filename): void
     {
-        $path = rtrim($targetDirectory, '/') . '/' . $filename;
+        $targetDirectory = rtrim($targetDirectory, '/');
 
-        if (file_exists($path)) {
+        // Some legacy rows may store a prefixed path (e.g. files/cv.pdf).
+        // We normalize to a plain filename to always target the expected directory.
+        $normalizedFilename = basename(str_replace('\\', '/', $filename));
+        $path = $targetDirectory . '/' . $normalizedFilename;
+
+        if (is_file($path)) {
             unlink($path);
         }
     }

@@ -22,6 +22,9 @@ class Project
     #[ORM\Column(type: 'text')]
     private string $description = '';
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $githubUrl = null;
+
     #[ORM\Column(type: 'json')]
     private array $images = [];
 
@@ -64,6 +67,18 @@ class Project
     public function setDescription(string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getGithubUrl(): ?string
+    {
+        return $this->githubUrl;
+    }
+
+    public function setGithubUrl(?string $githubUrl): static
+    {
+        $this->githubUrl = $githubUrl;
 
         return $this;
     }

@@ -60,12 +60,49 @@ class ProjectController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageOrderRaw = $request->request->get('image_order', '');
+            $orderedImageNames = [];
+            if (is_string($imageOrderRaw) && $imageOrderRaw !== '') {
+                $decoded = json_decode($imageOrderRaw, true);
+                if (is_array($decoded)) {
+                    $orderedImageNames = array_values(array_unique(array_map(
+                        static fn(string $name): string => basename(str_replace('\\', '/', $name)),
+                        array_filter($decoded, static fn(mixed $v): bool => is_string($v) && $v !== ''),
+                    )));
+                }
+            }
+
+            if ($orderedImageNames !== []) {
+                $imagesByName = [];
+                foreach ($project->getImages() as $image) {
+                    $imagesByName[basename(str_replace('\\', '/', $image))] = $image;
+                }
+
+                $reorderedImages = [];
+                foreach ($orderedImageNames as $name) {
+                    if (isset($imagesByName[$name])) {
+                        $reorderedImages[] = $imagesByName[$name];
+                        unset($imagesByName[$name]);
+                    }
+                }
+
+                $project->setImages([...$reorderedImages, ...array_values($imagesByName)]);
+            }
+
             $deleteImages = $request->request->all()['delete_images'] ?? [];
-            foreach ($deleteImages as $filename) {
-                $this->fileUploader->remove($this->imagesDir, $filename);
+            $deleteImageNames = array_values(array_unique(array_map(
+                static fn(string $name): string => basename(str_replace('\\', '/', $name)),
+                array_filter($deleteImages, static fn(mixed $v): bool => is_string($v) && $v !== ''),
+            )));
+
+            if ($deleteImageNames !== []) {
                 $project->setImages(array_values(array_filter(
                     $project->getImages(),
-                    static fn(string $img): bool => $img !== $filename,
+                    static fn(string $img): bool => !in_array(
+                        basename(str_replace('\\', '/', $img)),
+                        $deleteImageNames,
+                        true,
+                    ),
                 )));
             }
 
@@ -75,6 +112,10 @@ class ProjectController extends AbstractController
             }
 
             $em->flush();
+
+            foreach ($deleteImageNames as $filename) {
+                $this->fileUploader->remove($this->imagesDir, $filename);
+            }
 
             $this->addFlash('success', 'Projet mis à jour.');
 

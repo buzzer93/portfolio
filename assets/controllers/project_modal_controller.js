@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ['overlay', 'title', 'description', 'tech', 'slides', 'dots', 'prevBtn', 'nextBtn'];
+    static targets = ['overlay', 'title', 'description', 'tech', 'githubLink', 'slides', 'dots', 'prevBtn', 'nextBtn'];
 
     connect() {
         this.images = [];
@@ -21,6 +21,14 @@ export default class extends Controller {
 
         this.titleTarget.textContent = data.title;
         this.descriptionTarget.textContent = data.description;
+        const githubUrl = typeof data.githubUrl === 'string' ? data.githubUrl.trim() : '';
+        if (githubUrl.length > 0) {
+            this.githubLinkTarget.href = githubUrl;
+            this.githubLinkTarget.hidden = false;
+        } else {
+            this.githubLinkTarget.hidden = true;
+            this.githubLinkTarget.removeAttribute('href');
+        }
         this.techTarget.innerHTML = data.tech
             .map(t => `<span class="modal-tech-tag">${this.escape(t)}</span>`)
             .join('');

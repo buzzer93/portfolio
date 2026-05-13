@@ -30,9 +30,10 @@ Fonctionnalites cote admin :
 - Tableau de bord admin.
 - CRUD projets : creation, edition, suppression.
 - Reordonnancement des projets.
-- Upload et suppression d'images projets.
+- Upload, suppression et reorganisation des images projets (ordre du carousel).
 - Edition du profil (a propos, competences frontend/backend).
 - Upload/remplacement photo de profil et CV (PDF).
+- Nettoyage automatique des anciens fichiers remplaces (images/CV/projets) sur le disque.
 
 Securite :
 - Acces `/admin` reserve au role `ROLE_ADMIN`.
@@ -103,4 +104,5 @@ php bin/phpunit
 - Les images sont stockees dans `public/images`.
 - Les photos de profil sont stockees dans `public/images/profile`.
 - Les CV sont stockes dans `public/files`.
+- Quand un fichier est retire depuis l'admin (ou remplace), il est supprime physiquement du dossier correspondant.
 - En production, configurez un vrai `MAILER_DSN`.

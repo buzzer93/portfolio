@@ -11,11 +11,13 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Url;
 
 class ProjectType extends AbstractType
 {
@@ -30,6 +32,14 @@ class ProjectType extends AbstractType
                 'label' => 'Description',
                 'constraints' => [new NotBlank()],
                 'attr' => ['rows' => 4],
+            ])
+            ->add('githubUrl', UrlType::class, [
+                'label' => 'Lien du repo GitHub',
+                'required' => false,
+                'default_protocol' => 'https',
+                'constraints' => [
+                    new Url(message: 'Veuillez saisir une URL valide.'),
+                ],
             ])
             ->add('techStack', TextType::class, [
                 'label' => 'Stack technique',

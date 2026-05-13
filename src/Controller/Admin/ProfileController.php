@@ -32,6 +32,8 @@ class ProfileController extends AbstractController
     {
         $profile = $repository->findProfile() ?? new Profile();
         $isNew = $profile->getId() === null;
+        $oldPhotoPath = $profile->getPhotoPath();
+        $oldCvPath = $profile->getCvPath();
 
         $form = $this->createForm(ProfileType::class, $profile);
         $form->handleRequest($request);
@@ -39,17 +41,11 @@ class ProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $photoFile = $form->get('photoFile')->getData();
             if ($photoFile) {
-                if ($profile->getPhotoPath()) {
-                    $this->fileUploader->remove($this->photoDir, $profile->getPhotoPath());
-                }
                 $profile->setPhotoPath($this->fileUploader->upload($photoFile, $this->photoDir));
             }
 
             $cvFile = $form->get('cvFile')->getData();
             if ($cvFile) {
-                if ($profile->getCvPath()) {
-                    $this->fileUploader->remove($this->filesDir, $profile->getCvPath());
-                }
                 $profile->setCvPath($this->fileUploader->upload($cvFile, $this->filesDir));
             }
 
@@ -58,6 +54,14 @@ class ProfileController extends AbstractController
             }
 
             $em->flush();
+
+            if ($photoFile && $oldPhotoPath) {
+                $this->fileUploader->remove($this->photoDir, $oldPhotoPath);
+            }
+
+            if ($cvFile && $oldCvPath) {
+                $this->fileUploader->remove($this->filesDir, $oldCvPath);
+            }
 
             $this->addFlash('success', 'Profil mis à jour.');
 

@@ -6,7 +6,8 @@
                 title: project.title,
                 description: project.description,
                 images: project.images,
-                tech: project.techStack
+                tech: project.techStack,
+                githubUrl: project.githubUrl
             }|json_encode %}
             <article class="projects-card">
                 <img src="{{ asset('images/' ~ project.images[0]) }}" alt="{{ project.title }}" class="projects-img" />
