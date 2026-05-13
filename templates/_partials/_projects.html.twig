@@ -3,12 +3,21 @@
     <div class="projects-container container grid">
         {% for project in projects %}
             <article class="projects-card">
-                <img src="{{ asset('images/' ~ project.image) }}" alt="{{ project.title }}" class="project-img" />
+                <img src="{{ asset('images/' ~ project.image) }}" alt="{{ project.title }}" class="projects-img" />
                 <div class="projects-modal">
-                    <span class="projects-subtitle">{{ project.subtitle }}</span>
                     <h2 class="projects-title">{{ project.title }}</h2>
-                    <a href="{{ project.url }}" target="_blank" class="projects-button">
-                        Visiter <i class="ri-external-link-line"></i>
+                    {% if project.description is defined %}
+                        <p class="projects-description">{{ project.description }}</p>
+                    {% endif %}
+                    {% if project.tech is defined %}
+                        <div class="projects-tech">
+                            {% for tag in project.tech|slice(0, 3) %}
+                                <span class="tech-tag">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <a href="{{ project.url }}" target="_blank" rel="noopener noreferrer" class="projects-button">
+                        Voir le projet <i class="ri-external-link-line"></i>
                     </a>
                 </div>
             </article>

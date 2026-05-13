@@ -46,6 +46,7 @@ window.addEventListener('scroll', () => {
 const sr = ScrollReveal({ origin: 'top', distance: '60px', duration: 2000, reset: true });
 sr.reveal('.home-data, .home-social, .contact-container, .footer-container');
 sr.reveal('.home-image', { origin: 'bottom' });
-sr.reveal('.about-data, .skills-data', { origin: 'left' });
-sr.reveal('.about-image, .skills-content', { origin: 'right' });
+sr.reveal('.about-data, .skills .section-title', { origin: 'left' });
+sr.reveal('.about-image, .skills-groups', { origin: 'right' });
+sr.reveal('.skills-cta', { origin: 'bottom' });
 sr.reveal('.projects-card', { interval: 150 });

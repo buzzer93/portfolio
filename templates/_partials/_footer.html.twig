@@ -2,21 +2,21 @@
     <div class="footer-container container grid">
         <div>
             <h1 class="footer-title">Nicolas <span>Rodriguez</span></h1>
-            <h2 class="footer-education">Développeur Web</h2>
+            <p class="footer-education">Développeur PHP · Symfony</p>
         </div>
+
         <div class="footer-social">
-            <a href="https://github.com/buzzer93" target="_blank" class="footer-social-link">
+            <a href="https://github.com/buzzer93" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="GitHub">
                 <i class="ri-github-fill"></i>
             </a>
-            <a href="https://www.linkedin.com/in/nicolas-rodriguez-54771b285" target="_blank" class="footer-social-link">
+            <a href="https://www.linkedin.com/in/nicolas-rodriguez-54771b285" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="LinkedIn">
                 <i class="ri-linkedin-box-fill"></i>
             </a>
-        </div>
-        <div class="footer-social">
-            <a href="{{ asset('CV-Rodriguez-nicolas.pdf') }}" download="CV-Rodriguez-nicolas" class="button">
-                <i class="ri-file-download-fill"></i> Mon CV
+            <a href="{{ asset('CV-Rodriguez-nicolas.pdf') }}" download="CV-Rodriguez-nicolas" class="footer-social-link" aria-label="Télécharger le CV">
+                <i class="ri-file-download-fill"></i>
             </a>
         </div>
-        <span class="footer-cody"></span>
     </div>
+
+    <p class="footer-copy container">© {{ "now"|date("Y") }} Nicolas Rodriguez</p>
 </footer>
