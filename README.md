@@ -21,7 +21,7 @@ Stack principale :
 
 Fonctionnalites cote public :
 - Page d'accueil unique avec sections portfolio.
-- Affichage des projets ordonnes.
+- Affichage des projets actifs ordonnes.
 - Affichage du profil (texte, competences, photo, CV).
 - Formulaire de contact serveur avec envoi d'email.
 
@@ -29,15 +29,19 @@ Fonctionnalites cote admin :
 - Authentification admin (`/admin/login`).
 - Tableau de bord admin.
 - CRUD projets : creation, edition, suppression.
+- Statut projet actif/inactif : les projets inactifs sont masques du site public.
+- Section "Projets inactifs" dans le dashboard avec action de reactivation en un clic.
 - Reordonnancement des projets.
 - Upload, suppression et reorganisation des images projets (ordre du carousel).
 - Edition du profil (a propos, competences frontend/backend).
 - Upload/remplacement photo de profil et CV (PDF).
 - Nettoyage automatique des anciens fichiers remplaces (images/CV/projets) sur le disque.
+- Commande console pour mettre a jour les credentials admin (email + mot de passe).
 
 Securite :
 - Acces `/admin` reserve au role `ROLE_ADMIN`.
 - Protection CSRF sur la suppression des projets.
+- Protection CSRF sur la bascule actif/inactif des projets.
 
 ## Installation
 
@@ -97,6 +101,27 @@ Puis ouvrir :
 
 ```bash
 php bin/phpunit
+```
+
+## Commandes utiles
+
+Mettre a jour les credentials admin en mode interactif :
+
+```bash
+php bin/console app:admin:update-credentials
+```
+
+Appliquer les migrations (obligatoire apres un pull) :
+
+```bash
+php bin/console doctrine:migrations:migrate -n
+```
+
+Si vous rencontrez une erreur SQL de type "no such column", appliquez les migrations puis videz le cache :
+
+```bash
+php bin/console doctrine:migrations:migrate -n
+php bin/console cache:clear
 ```
 
 ## Notes
