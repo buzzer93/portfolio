@@ -6,22 +6,18 @@
                 title: project.title,
                 description: project.description,
                 images: project.images,
-                tech: project.tech
+                tech: project.techStack
             }|json_encode %}
             <article class="projects-card">
-                <img src="{{ asset('images/' ~ project.image) }}" alt="{{ project.title }}" class="projects-img" />
+                <img src="{{ asset('images/' ~ project.images[0]) }}" alt="{{ project.title }}" class="projects-img" />
                 <div class="projects-modal">
                     <h2 class="projects-title">{{ project.title }}</h2>
-                    {% if project.description is defined %}
-                        <p class="projects-description">{{ project.description }}</p>
-                    {% endif %}
-                    {% if project.tech is defined %}
-                        <div class="projects-tech">
-                            {% for tag in project.tech|slice(0, 3) %}
-                                <span class="tech-tag">{{ tag }}</span>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
+                    <p class="projects-description">{{ project.description }}</p>
+                    <div class="projects-tech">
+                        {% for tag in project.techStack|slice(0, 3) %}
+                            <span class="tech-tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
                     <button class="projects-button"
                             data-action="project-modal#open"
                             data-project-info="{{ projectInfo }}">

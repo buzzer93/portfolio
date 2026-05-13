@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Form\ContactType;
+use App\Repository\ProfileRepository;
+use App\Repository\ProjectRepository;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,56 +16,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController
 {
-    private const PROJECTS = [
-        [
-            'title'       => 'PMS-Itylon',
-            'description' => 'Gestion de réservations de locations saisonnières avec tableau de bord, suivi des clients et statistiques via graphiques interactifs.',
-            'image'       => 'PMS-itylon.png',
-            'images'      => ['PMS-itylon.png'],
-            'url'         => 'https://github.com/buzzer93/PMS-itylon',
-            'tech'        => ['PHP', 'MySQL', 'JavaScript', 'ChartJS'],
-        ],
-        [
-            'title'       => 'Gestion de stock',
-            'description' => 'Inventaire et étiquetage de produits avec recherche, filtres et impression d\'étiquettes depuis l\'interface.',
-            'image'       => 'inventaire.png',
-            'images'      => ['inventaire.png'],
-            'url'         => 'https://gestion-trieves.nicolas-rodriguez.fr/',
-            'tech'        => ['Symfony', 'Doctrine', 'MySQL'],
-        ],
-        [
-            'title'       => 'Atlantis-RP',
-            'description' => 'Site communautaire GTA-RP présentant les règles, l\'équipe et les actualités du serveur roleplay.',
-            'image'       => 'atlantis.png',
-            'images'      => ['atlantis.png'],
-            'url'         => 'http://atlantis-rp.nicolas-rodriguez.fr/',
-            'tech'        => ['HTML', 'CSS', 'JavaScript'],
-        ],
-        [
-            'title'       => 'Résidence Itylon',
-            'description' => 'Site vitrine de location saisonnière avec galerie, tarifs et formulaire de contact intégré.',
-            'image'       => 'itylon.png',
-            'images'      => ['itylon.png'],
-            'url'         => 'https://www.residence-itylon.com/',
-            'tech'        => ['PHP', 'HTML', 'CSS'],
-        ],
-        [
-            'title'       => 'Portfolio',
-            'description' => 'Portfolio personnel développé sous Symfony, présentant mes projets, compétences et un formulaire de contact.',
-            'image'       => 'portfolio.png',
-            'images'      => ['portfolio.png'],
-            'url'         => 'https://nicolas-rodriguez.fr/',
-            'tech'        => ['Symfony', 'PHP', 'HTML/CSS'],
-        ],
-        [
-            'title'       => "Trièves Connect'",
-            'description' => 'Site vitrine pour un magasin informatique local, avec présentation des services, produits et coordonnées.',
-            'image'       => 'trieves.png',
-            'images'      => ['trieves.png'],
-            'url'         => 'https://trievesconnect.fr/',
-            'tech'        => ['PHP', 'HTML', 'CSS'],
-        ],
-    ];
+    public function __construct(
+        private readonly ProjectRepository $projectRepository,
+        private readonly ProfileRepository $profileRepository,
+    ) {
+    }
 
     #[Route('/', name: 'home')]
     public function index(Request $request, MailerInterface $mailer): Response
@@ -87,7 +46,8 @@ class HomeController extends AbstractController
         }
 
         return $this->render('home/index.html.twig', [
-            'projects'    => self::PROJECTS,
+            'projects'    => $this->projectRepository->findAllOrdered(),
+            'profile'     => $this->profileRepository->findProfile(),
             'contactForm' => $form,
         ]);
     }

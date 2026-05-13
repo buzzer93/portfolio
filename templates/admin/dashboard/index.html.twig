@@ -1,0 +1,73 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Projets{% endblock %}
+{% block page_title %}Projets{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div style="display:flex; justify-content:flex-end; margin-bottom:1.5rem;">
+    <a href="{{ path('admin_project_new') }}" class="btn btn-primary">
+        <i class="ri-add-line"></i> Nouveau projet
+    </a>
+</div>
+
+{% if projects is empty %}
+    <div class="card" style="text-align:center; padding:3rem; color:var(--text);">
+        <i class="ri-folder-open-line" style="font-size:2.5rem; color:var(--border); display:block; margin-bottom:0.75rem;"></i>
+        Aucun projet — <a href="{{ path('admin_project_new') }}" style="color:var(--accent);">créer le premier</a>
+    </div>
+{% else %}
+    <div class="projects-grid" id="sortable-cards">
+        {% for project in projects %}
+        <div class="admin-project-card" data-id="{{ project.id }}">
+            <span class="card-drag-handle" title="Déplacer"><i class="ri-draggable"></i></span>
+            <img src="{{ asset('images/' ~ project.images[0]) }}" alt="{{ project.title }}" class="admin-card-img" />
+            <div class="admin-card-overlay">
+                <h3 class="admin-card-title">{{ project.title }}</h3>
+                <div class="admin-card-tech">
+                    {% for tag in project.techStack|slice(0, 4) %}
+                        <span class="admin-tech-tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                <div class="admin-card-actions">
+                    <a href="{{ path('admin_project_edit', {id: project.id}) }}" class="btn btn-ghost btn-sm">
+                        <i class="ri-pencil-line"></i> Modifier
+                    </a>
+                    <form method="post" action="{{ path('admin_project_delete', {id: project.id}) }}"
+                          onsubmit="return confirm('Supprimer « {{ project.title|e('js') }} » ?')"
+                          style="display:inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete-project-' ~ project.id) }}" />
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="ri-delete-bin-line"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<script>
+Sortable.create(document.getElementById('sortable-cards'), {
+    handle: '.card-drag-handle',
+    animation: 200,
+    ghostClass: 'sortable-ghost',
+    onEnd() {
+        const cards = document.querySelectorAll('#sortable-cards .admin-project-card');
+        const payload = Array.from(cards).map((card, index) => ({
+            id: parseInt(card.dataset.id),
+            position: index,
+        }));
+        fetch('{{ path('admin_project_reorder') }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+    },
+});
+</script>
+{% endblock %}

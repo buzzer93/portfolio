@@ -6,22 +6,34 @@
             <div>
                 <span class="skills-group-label">Front-end</span>
                 <div class="skills-badges">
-                    <span class="skill-badge"><i class="ri-html5-fill"></i> HTML5</span>
-                    <span class="skill-badge"><i class="ri-css3-fill"></i> CSS3</span>
-                    <span class="skill-badge"><i class="ri-javascript-fill"></i> JavaScript</span>
-                    <span class="skill-badge"><i class="ri-bootstrap-fill"></i> Bootstrap</span>
-                    <span class="skill-badge"><i class="ri-layout-grid-fill"></i> Tailwind CSS</span>
+                    {% if profile and profile.frontendSkills|length > 0 %}
+                        {% for skill in profile.frontendSkills %}
+                            <span class="skill-badge"><i class="ri-code-line"></i> {{ skill }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <span class="skill-badge"><i class="ri-html5-fill"></i> HTML5</span>
+                        <span class="skill-badge"><i class="ri-css3-fill"></i> CSS3</span>
+                        <span class="skill-badge"><i class="ri-javascript-fill"></i> JavaScript</span>
+                        <span class="skill-badge"><i class="ri-bootstrap-fill"></i> Bootstrap</span>
+                        <span class="skill-badge"><i class="ri-layout-grid-fill"></i> Tailwind CSS</span>
+                    {% endif %}
                 </div>
             </div>
 
             <div>
                 <span class="skills-group-label">Back-end & Outils</span>
                 <div class="skills-badges">
-                    <span class="skill-badge"><i class="ri-server-fill"></i> PHP 8</span>
-                    <span class="skill-badge"><i class="devicon-symfony-original"></i> Symfony</span>
-                    <span class="skill-badge"><i class="ri-database-2-fill"></i> MySQL</span>
-                    <span class="skill-badge"><i class="ri-github-fill"></i> Git / GitHub</span>
-                    <span class="skill-badge"><i class="ri-terminal-box-fill"></i> Doctrine ORM</span>
+                    {% if profile and profile.backendSkills|length > 0 %}
+                        {% for skill in profile.backendSkills %}
+                            <span class="skill-badge"><i class="ri-code-s-slash-line"></i> {{ skill }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <span class="skill-badge"><i class="ri-server-fill"></i> PHP 8</span>
+                        <span class="skill-badge"><i class="devicon-symfony-original"></i> Symfony</span>
+                        <span class="skill-badge"><i class="ri-database-2-fill"></i> MySQL</span>
+                        <span class="skill-badge"><i class="ri-github-fill"></i> Git / GitHub</span>
+                        <span class="skill-badge"><i class="ri-terminal-box-fill"></i> Doctrine ORM</span>
+                    {% endif %}
                 </div>
             </div>
         </div>

@@ -3,20 +3,24 @@
         <div class="about-data">
             <h2 class="section-title">À propos <span>de moi</span></h2>
             <p class="about-description">
-                J'ai commencé à coder par curiosité, simplement pour comprendre… puis pour me simplifier la vie
-                avec de petits scripts PHP. En 2020, j'ai créé mon premier site web et là, ça a fait tilt :
-                j'ai su que c'était ce que je voulais faire de ma vie.<br /><br />
+                {% if profile and profile.aboutText %}
+                    {{ profile.aboutText|nl2br }}
+                {% else %}
+                    J'ai commencé à coder par curiosité, simplement pour comprendre… puis pour me simplifier la vie
+                    avec de petits scripts PHP. En 2020, j'ai créé mon premier site web et là, ça a fait tilt :
+                    j'ai su que c'était ce que je voulais faire de ma vie.<br /><br />
 
-                En 2023, j'ai décidé de me lancer sérieusement dans une reconversion, en autodidacte, en
-                parallèle de ma vie de famille et de mon travail. J'ai alors commencé à créer des sites pour des
-                amis, ainsi que des applications web pour l'entreprise familiale et la boutique d'un ami.<br /><br />
+                    En 2023, j'ai décidé de me lancer sérieusement dans une reconversion, en autodidacte, en
+                    parallèle de ma vie de famille et de mon travail. J'ai alors commencé à créer des sites pour des
+                    amis, ainsi que des applications web pour l'entreprise familiale et la boutique d'un ami.<br /><br />
 
-                Curieux de nature, j'apprends vite, je m'adapte facilement et j'aime comprendre ce qui se cache
-                derrière les outils que j'utilise. Le web est pour moi un terrain de jeu infini, un espace
-                d'exploration où chaque problème devient une occasion d'apprendre.<br /><br />
+                    Curieux de nature, j'apprends vite, je m'adapte facilement et j'aime comprendre ce qui se cache
+                    derrière les outils que j'utilise. Le web est pour moi un terrain de jeu infini, un espace
+                    d'exploration où chaque problème devient une occasion d'apprendre.<br /><br />
 
-                Patient, rigoureux et déterminé, je progresse en continu avec le souci de bien faire. Mon
-                parcours autodidacte reflète ma persévérance et ma volonté de toujours aller plus loin.
+                    Patient, rigoureux et déterminé, je progresse en continu avec le souci de bien faire. Mon
+                    parcours autodidacte reflète ma persévérance et ma volonté de toujours aller plus loin.
+                {% endif %}
             </p>
             <a href="#contact" class="button">Contactez-moi</a>
         </div>

@@ -1,0 +1,80 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+{% block page_title %}Profil{% endblock %}
+
+{% block content %}
+{{ form_start(form, {attr: {enctype: 'multipart/form-data', class: 'form-grid'}}) }}
+
+    <div class="card">
+        <div class="form-group">
+            {{ form_label(form.aboutText) }}
+            {{ form_widget(form.aboutText, {attr: {class: 'form-control'}}) }}
+            {{ form_errors(form.aboutText) }}
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 style="font-size:0.8125rem; font-weight:600; color:var(--title); margin-bottom:1.25rem; text-transform:uppercase; letter-spacing:0.06em;">Compétences</h2>
+        <div class="form-grid">
+            <div class="form-group">
+                {{ form_label(form.frontendSkills) }}
+                {{ form_widget(form.frontendSkills, {attr: {class: 'form-control', placeholder: 'HTML5, CSS3, JavaScript, Tailwind CSS'}}) }}
+                <span class="help">{{ form_help(form.frontendSkills) }}</span>
+                {{ form_errors(form.frontendSkills) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.backendSkills) }}
+                {{ form_widget(form.backendSkills, {attr: {class: 'form-control', placeholder: 'PHP 8, Symfony, MySQL, Git'}}) }}
+                <span class="help">{{ form_help(form.backendSkills) }}</span>
+                {{ form_errors(form.backendSkills) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 style="font-size:0.8125rem; font-weight:600; color:var(--title); margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.06em;">Photo de profil</h2>
+
+        {% if profile.photoPath %}
+        <div style="margin-bottom:1rem;">
+            <img src="{{ asset('images/profile/' ~ profile.photoPath) }}"
+                 alt="Photo actuelle"
+                 style="width:80px; height:80px; object-fit:cover; border-radius:50%; border:2px solid var(--accent);" />
+            <p style="font-size:0.75rem; color:var(--text); margin-top:0.375rem;">Photo actuelle — téléverser une nouvelle pour la remplacer</p>
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            {{ form_label(form.photoFile) }}
+            {{ form_widget(form.photoFile, {attr: {class: 'form-control'}}) }}
+            {{ form_errors(form.photoFile) }}
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 style="font-size:0.8125rem; font-weight:600; color:var(--title); margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.06em;">CV</h2>
+
+        {% if profile.cvPath %}
+        <p style="font-size:0.8rem; color:var(--success); margin-bottom:0.75rem;">
+            <i class="ri-file-pdf-line"></i>
+            CV en ligne —
+            <a href="{{ asset('files/' ~ profile.cvPath) }}" target="_blank" style="color:var(--accent);">télécharger</a>
+            · téléverser un nouveau fichier pour le remplacer
+        </p>
+        {% endif %}
+
+        <div class="form-group">
+            {{ form_label(form.cvFile) }}
+            {{ form_widget(form.cvFile, {attr: {class: 'form-control'}}) }}
+            {{ form_errors(form.cvFile) }}
+        </div>
+    </div>
+
+    <div>
+        <button type="submit" class="btn btn-primary">
+            <i class="ri-save-line"></i> Enregistrer
+        </button>
+    </div>
+
+{{ form_end(form) }}
+{% endblock %}

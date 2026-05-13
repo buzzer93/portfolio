@@ -1,0 +1,74 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% set is_edit = project.id is not null %}
+{% block title %}{{ is_edit ? 'Modifier' : 'Nouveau' }} projet{% endblock %}
+{% block page_title %}{{ is_edit ? 'Modifier' : 'Nouveau' }} projet{% endblock %}
+
+{% block content %}
+{{ form_start(form, {attr: {enctype: 'multipart/form-data', class: 'form-grid'}}) }}
+
+    <div class="card">
+        <div class="form-grid">
+
+            <div class="form-group">
+                {{ form_label(form.title) }}
+                {{ form_widget(form.title, {attr: {class: 'form-control'}}) }}
+                {{ form_errors(form.title) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.description) }}
+                {{ form_widget(form.description, {attr: {class: 'form-control'}}) }}
+                {{ form_errors(form.description) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.techStack) }}
+                {{ form_widget(form.techStack, {attr: {class: 'form-control', placeholder: 'PHP, Symfony, MySQL'}}) }}
+                <span class="help">{{ form_help(form.techStack) }}</span>
+                {{ form_errors(form.techStack) }}
+            </div>
+
+            <div class="form-group" style="max-width:160px;">
+                {{ form_label(form.position) }}
+                {{ form_widget(form.position, {attr: {class: 'form-control'}}) }}
+                {{ form_errors(form.position) }}
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 style="font-size:0.8125rem; font-weight:600; color:var(--title); margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.06em;">Images</h2>
+
+        {% if is_edit and project.images|length > 0 %}
+        <p style="font-size:0.8rem; color:var(--text); margin-bottom:0.75rem;">Images actuelles — cochez pour supprimer :</p>
+        <div class="img-grid" style="margin-bottom:1.5rem;">
+            {% for image in project.images %}
+            <div class="img-item">
+                <img src="{{ asset('images/' ~ image) }}" alt="{{ project.title }}" />
+                <label>
+                    <input type="checkbox" name="delete_images[]" value="{{ image }}" />
+                    Supprimer
+                </label>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            {{ form_label(form.imageFiles) }}
+            {{ form_widget(form.imageFiles, {attr: {class: 'form-control'}}) }}
+            {{ form_errors(form.imageFiles) }}
+        </div>
+    </div>
+
+    <div style="display:flex; gap:0.75rem;">
+        <button type="submit" class="btn btn-primary">
+            <i class="ri-save-line"></i> {{ is_edit ? 'Enregistrer' : 'Créer' }}
+        </button>
+        <a href="{{ path('admin_dashboard') }}" class="btn btn-ghost">Annuler</a>
+    </div>
+
+{{ form_end(form) }}
+{% endblock %}
