@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 /*=============== GOOGLE FONTS ===============*/
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 
@@ -304,6 +306,18 @@ span,
     line-height: 1.1;
 }
 
+.home-education {
+    margin-bottom: 1.75rem;
+}
+
+.home-buttons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .home-description {
     margin-block: 1rem 1.5rem;
 }
@@ -354,6 +368,16 @@ span,
     box-shadow: 0 8px 32px hsla(var(--hue), 100%, 40%, 0.35),
                 0 2px 8px hsla(var(--hue), 100%, 40%, 0.2);
     transform: translateY(-1px);
+}
+.button--ghost {
+    background-color: transparent;
+    border: 2px solid var(--first-color);
+    color: var(--first-color);
+    padding: calc(0.75rem - 2px) calc(1.5rem - 2px);
+}
+.button--ghost:hover {
+    background-color: var(--first-color);
+    color: var(--title-color);
 }
 /*=============== ABOUT ===============*/
 .about-container{
@@ -677,6 +701,7 @@ span,
     text-align: initial;
 }
 
+.home-buttons,
 .home-social{
     justify-content: initial;
 }
