@@ -1,0 +1,30 @@
+#!/bin/bash
+# Post-edit hook example for Symfony projects.
+# Triggered after Claude edits or writes a file.
+# Copy to .claude/hooks/lint-on-save.sh and adapt to the project.
+# Register in .claude/settings.json under hooks.PostToolUse (matcher: "Edit|Write").
+#
+# $CLAUDE_TOOL_INPUT_FILE_PATH contains the edited file path (when available).
+
+FILE="${CLAUDE_TOOL_INPUT_FILE_PATH:-}"
+
+if [ -z "$FILE" ]; then
+  exit 0
+fi
+
+# PHP-CS-Fixer on the saved PHP file
+if [[ "$FILE" == *.php ]] && [ -f "vendor/bin/php-cs-fixer" ]; then
+  vendor/bin/php-cs-fixer fix "$FILE" --quiet 2>/dev/null || true
+fi
+
+# Twig lint on saved Twig files
+if [[ "$FILE" == *.twig ]]; then
+  php bin/console lint:twig "$FILE" --quiet 2>/dev/null || true
+fi
+
+# YAML lint on saved YAML files
+if [[ "$FILE" == *.yaml ]] || [[ "$FILE" == *.yml ]]; then
+  php bin/console lint:yaml "$FILE" --quiet 2>/dev/null || true
+fi
+
+exit 0

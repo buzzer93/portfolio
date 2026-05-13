@@ -1,0 +1,17 @@
+<section class="projects section" id="projects">
+    <h2 class="section-title">Mes <span>Projets</span></h2>
+    <div class="projects-container container grid">
+        {% for project in projects %}
+            <article class="projects-card">
+                <img src="{{ asset('images/' ~ project.image) }}" alt="{{ project.title }}" class="project-img" />
+                <div class="projects-modal">
+                    <span class="projects-subtitle">{{ project.subtitle }}</span>
+                    <h2 class="projects-title">{{ project.title }}</h2>
+                    <a href="{{ project.url }}" target="_blank" class="projects-button">
+                        Visiter <i class="ri-external-link-line"></i>
+                    </a>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+</section>

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+
+  // Uncomment to auto-approve file edits without confirmation prompt.
+  // Useful for refactoring sessions — shell commands still require approval.
+  // "permissionMode": "acceptEdits",
+
+  "permissions": {
+    "allow": [],
+    "ask": [],
+    "deny": []
+  },
+
+  "hooks": {
+    // Automatically run GrumPHP after any PHP file edit.
+    // Catches CS, PHPStan, and debug statements before you commit.
+    // "PostToolUse": [
+    //   {
+    //     "matcher": "Edit(*.php)",
+    //     "hooks": [
+    //       {
+    //         "type": "command",
+    //         "command": "vendor/bin/grumphp run --no-interaction 2>&1 | tail -20"
+    //       }
+    //     ]
+    //   }
+    // ],
+
+    // Log context compaction events for debugging long sessions.
+    // "PreCompact": [
+    //   {
+    //     "hooks": [
+    //       {
+    //         "type": "command",
+    //         "command": "echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Context compaction triggered\" >> .claude/compaction.log"
+    //       }
+    //     ]
+    //   }
+    // ]
+  }
+}

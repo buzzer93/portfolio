@@ -1,0 +1,23 @@
+<section class="contact section" id="contact">
+    <h3 class="section-subtitle" style="font-size: larger;">
+        On en discute <span>autour d'un Café ?</span>
+    </h3>
+    <h2 class="section-title">Contact</h2>
+    <div class="contact-container container grid">
+        {% for message in app.flashes('success') %}
+            <p class="contact-message contact-message--success">{{ message }}</p>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+            <p class="contact-message contact-message--error">{{ message }}</p>
+        {% endfor %}
+
+        {{ form_start(contactForm, { attr: { class: 'contact-form', id: 'contact-form' } }) }}
+            <div class="contact-group">
+                {{ form_widget(contactForm.name, { attr: { class: 'contact-input', placeholder: 'Nom' } }) }}
+                {{ form_widget(contactForm.email, { attr: { class: 'contact-input', placeholder: 'Email' } }) }}
+            </div>
+            {{ form_widget(contactForm.message, { attr: { class: 'contact-input', placeholder: 'Message', cols: '30', rows: '10' } }) }}
+            <button type="submit" class="button contact-button">Envoyer</button>
+        {{ form_end(contactForm) }}
+    </div>
+</section>

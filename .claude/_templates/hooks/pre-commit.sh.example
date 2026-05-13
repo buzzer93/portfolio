@@ -1,0 +1,40 @@
+#!/bin/bash
+# Pre-commit hook example for Symfony projects.
+# Copy to .claude/hooks/pre-commit.sh and adapt to the project.
+# Register in .claude/settings.json under hooks.PreToolUse (matcher: "Bash").
+#
+# Exit code 2 = block the action.
+# Exit code 0 = allow it.
+
+set -e
+
+# Option A: Run GrumPHP (recommended if configured in the project)
+# if [ -f "vendor/bin/grumphp" ]; then
+#   vendor/bin/grumphp run --no-interaction || exit 2
+# fi
+
+# Option B: Run individual checks manually
+
+# PHP syntax check on staged files
+STAGED_PHP=$(git diff --cached --name-only | grep -E "\.php$" || true)
+if [ -n "$STAGED_PHP" ]; then
+  for file in $STAGED_PHP; do
+    php -l "$file" > /dev/null 2>&1 || { echo "PHP syntax error in $file"; exit 2; }
+  done
+fi
+
+# PHP-CS-Fixer dry-run on staged files (blocks if formatting issues found)
+# if [ -f "vendor/bin/php-cs-fixer" ] && [ -n "$STAGED_PHP" ]; then
+#   vendor/bin/php-cs-fixer fix --dry-run --diff $STAGED_PHP || exit 2
+# fi
+
+# PHPStan analysis
+# if [ -f "vendor/bin/phpstan" ]; then
+#   vendor/bin/phpstan analyse --no-progress || exit 2
+# fi
+
+# PHPUnit fast suite (tags:unit only, to keep commits quick)
+# php bin/phpunit --testsuite=unit --no-coverage --quiet || exit 2
+
+echo "Pre-commit checks passed."
+exit 0

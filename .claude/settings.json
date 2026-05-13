@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "model": "claude-sonnet-4-6",
+  "autoMemoryEnabled": true,
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/sounds/play.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(composer validate)",
+      "Bash(php bin/console about)",
+      "Bash(php bin/console debug:router *)",
+      "Bash(php bin/console debug:container *)",
+      "Bash(php bin/console doctrine:migrations:status *)",
+      "Bash(php bin/console lint:twig *)",
+      "Bash(php bin/console lint:yaml *)",
+      "Bash(php bin/phpunit *)",
+      "Bash(vendor/bin/grumphp run *)",
+      "Bash(npm run build)",
+      "Bash(npm run lint *)"
+    ],
+    "ask": [
+      "Bash(composer install *)",
+      "Bash(composer update *)",
+      "Bash(php bin/console doctrine:migrations:migrate *)",
+      "Bash(php bin/console doctrine:database:create *)",
+      "Bash(git pull *)"
+    ],
+    "deny": [
+      "Read(./.env.local)",
+      "Read(./.env.prod)",
+      "Read(./secrets/**)",
+      "Read(./*.pem)",
+      "Read(./*.key)",
+      "Bash(rm -rf *)",
+      "Bash(chmod -R 777 *)",
+      "Bash(git reset --hard *)",
+      "Bash(git clean -fd *)",
+      "Bash(git push --force *)",
+      "Bash(php bin/console doctrine:database:drop *)",
+      "Bash(php bin/console doctrine:schema:drop *)",
+      "Bash(php bin/console doctrine:schema:update *)",
+      "Bash(nc *)"
+    ]
+  }
+}

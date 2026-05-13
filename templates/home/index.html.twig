@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% include '_partials/_nav.html.twig' %}
+
+    <main class="main">
+        {% include '_partials/_hero.html.twig' %}
+        {% include '_partials/_about.html.twig' %}
+        {% include '_partials/_skills.html.twig' %}
+        {% include '_partials/_projects.html.twig' %}
+        {% include '_partials/_contact.html.twig' %}
+    </main>
+
+    {% include '_partials/_footer.html.twig' %}
+
+    <a href="#" class="scrollup" id="scroll-up">
+        <i class="ri-arrow-up-line"></i>
+    </a>
+{% endblock %}
