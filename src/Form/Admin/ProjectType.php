@@ -7,6 +7,7 @@ namespace App\Form\Admin;
 use App\Entity\Project;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -47,6 +48,10 @@ class ProjectType extends AbstractType
             ])
             ->add('position', IntegerType::class, [
                 'label' => 'Position',
+            ])
+            ->add('isActive', CheckboxType::class, [
+                'label' => 'Projet actif (visible sur le site)',
+                'required' => false,
             ])
             ->add('imageFiles', FileType::class, [
                 'label' => 'Ajouter des images',

@@ -23,4 +23,26 @@ class ProjectRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /** @return Project[] */
+    public function findActiveOrdered(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.isActive = :active')
+            ->setParameter('active', true)
+            ->orderBy('p.position', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /** @return Project[] */
+    public function findInactiveOrdered(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.isActive = :active')
+            ->setParameter('active', false)
+            ->orderBy('p.position', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

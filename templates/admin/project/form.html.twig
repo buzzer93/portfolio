@@ -45,6 +45,14 @@
                 {{ form_errors(form.position) }}
             </div>
 
+            <div class="form-group" style="align-self:end;">
+                <label style="display:flex; gap:0.5rem; align-items:center; font-size:0.85rem; color:var(--title);">
+                    {{ form_widget(form.isActive) }}
+                    {{ form.isActive.vars.label }}
+                </label>
+                {{ form_errors(form.isActive) }}
+            </div>
+
         </div>
     </div>
 

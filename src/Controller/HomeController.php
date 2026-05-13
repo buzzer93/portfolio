@@ -46,7 +46,7 @@ class HomeController extends AbstractController
         }
 
         return $this->render('home/index.html.twig', [
-            'projects'    => $this->projectRepository->findAllOrdered(),
+            'projects'    => $this->projectRepository->findActiveOrdered(),
             'profile'     => $this->profileRepository->findProfile(),
             'contactForm' => $form,
         ]);

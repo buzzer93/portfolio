@@ -149,6 +149,23 @@ class ProjectController extends AbstractController
         return $this->redirectToRoute('admin_dashboard');
     }
 
+    #[Route('/{id}/toggle-status', name: 'toggle_status', methods: ['POST'])]
+    public function toggleStatus(Project $project, Request $request, EntityManagerInterface $em): Response
+    {
+        if (!$this->isCsrfTokenValid('toggle-project-status-' . $project->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token CSRF invalide.');
+
+            return $this->redirectToRoute('admin_dashboard');
+        }
+
+        $project->setIsActive(!$project->isActive());
+        $em->flush();
+
+        $this->addFlash('success', $project->isActive() ? 'Projet activé.' : 'Projet désactivé.');
+
+        return $this->redirectToRoute('admin_dashboard');
+    }
+
     #[Route('/reorder', name: 'reorder', methods: ['POST'])]
     public function reorder(Request $request, ProjectRepository $repository, EntityManagerInterface $em): JsonResponse
     {

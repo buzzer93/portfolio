@@ -16,7 +16,8 @@ class DashboardController extends AbstractController
     public function index(ProjectRepository $projectRepository): Response
     {
         return $this->render('admin/dashboard/index.html.twig', [
-            'projects' => $projectRepository->findAllOrdered(),
+            'activeProjects' => $projectRepository->findActiveOrdered(),
+            'inactiveProjects' => $projectRepository->findInactiveOrdered(),
         ]);
     }
 }

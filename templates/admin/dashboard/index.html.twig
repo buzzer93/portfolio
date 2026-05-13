@@ -14,14 +14,15 @@
     </a>
 </div>
 
-{% if projects is empty %}
+{% if activeProjects is empty %}
     <div class="card" style="text-align:center; padding:3rem; color:var(--text);">
         <i class="ri-folder-open-line" style="font-size:2.5rem; color:var(--border); display:block; margin-bottom:0.75rem;"></i>
-        Aucun projet — <a href="{{ path('admin_project_new') }}" style="color:var(--accent);">créer le premier</a>
+        Aucun projet actif.
     </div>
 {% else %}
+    <h2 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--title); margin-bottom:0.85rem;">Projets actifs</h2>
     <div class="projects-grid" id="sortable-cards">
-        {% for project in projects %}
+        {% for project in activeProjects %}
         <div class="admin-project-card" data-id="{{ project.id }}">
             <span class="card-drag-handle" title="Déplacer"><i class="ri-draggable"></i></span>
             <img src="{{ asset('images/' ~ project.images[0]) }}" alt="{{ project.title }}" class="admin-card-img" />
@@ -36,6 +37,12 @@
                     <a href="{{ path('admin_project_edit', {id: project.id}) }}" class="btn btn-ghost btn-sm">
                         <i class="ri-pencil-line"></i> Modifier
                     </a>
+                    <form method="post" action="{{ path('admin_project_toggle_status', {id: project.id}) }}" style="display:inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('toggle-project-status-' ~ project.id) }}" />
+                        <button type="submit" class="btn btn-ghost btn-sm">
+                            <i class="ri-eye-off-line"></i> Masquer
+                        </button>
+                    </form>
                     <form method="post" action="{{ path('admin_project_delete', {id: project.id}) }}"
                           onsubmit="return confirm('Supprimer « {{ project.title|e('js') }} » ?')"
                           style="display:inline;">
@@ -51,23 +58,53 @@
     </div>
 {% endif %}
 
+<div class="card" style="margin-top:2rem;">
+    <h2 style="font-size:0.82rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--title); margin-bottom:1rem;">Projets inactifs</h2>
+
+    {% if inactiveProjects is empty %}
+        <p style="color:var(--text); font-size:0.9rem;">Aucun projet inactif.</p>
+    {% else %}
+        <div style="display:grid; gap:0.75rem;">
+            {% for project in inactiveProjects %}
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:1rem; border:1px solid var(--border); border-radius:0.75rem; padding:0.75rem 1rem;">
+                    <div>
+                        <div style="color:var(--title); font-weight:600;">{{ project.title }}</div>
+                        <div style="color:var(--text); font-size:0.8rem;">Ce projet est masqué sur le site public.</div>
+                    </div>
+                    <form method="post" action="{{ path('admin_project_toggle_status', {id: project.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('toggle-project-status-' ~ project.id) }}" />
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            <i class="ri-arrow-up-line"></i> Activer
+                        </button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
 <script>
-Sortable.create(document.getElementById('sortable-cards'), {
-    handle: '.card-drag-handle',
-    animation: 200,
-    ghostClass: 'sortable-ghost',
-    onEnd() {
-        const cards = document.querySelectorAll('#sortable-cards .admin-project-card');
-        const payload = Array.from(cards).map((card, index) => ({
-            id: parseInt(card.dataset.id),
-            position: index,
-        }));
-        fetch('{{ path('admin_project_reorder') }}', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-        });
-    },
-});
+const sortableContainer = document.getElementById('sortable-cards');
+
+if (sortableContainer) {
+    Sortable.create(sortableContainer, {
+        handle: '.card-drag-handle',
+        animation: 200,
+        ghostClass: 'sortable-ghost',
+        onEnd() {
+            const cards = document.querySelectorAll('#sortable-cards .admin-project-card');
+            const payload = Array.from(cards).map((card, index) => ({
+                id: parseInt(card.dataset.id, 10),
+                position: index,
+            }));
+
+            fetch('{{ path('admin_project_reorder') }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+        },
+    });
+}
 </script>
 {% endblock %}
