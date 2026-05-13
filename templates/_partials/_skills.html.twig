@@ -8,7 +8,7 @@
                 <div class="skills-badges">
                     {% if profile and profile.frontendSkills|length > 0 %}
                         {% for skill in profile.frontendSkills %}
-                            <span class="skill-badge"><i class="ri-code-line"></i> {{ skill }}</span>
+                            <span class="skill-badge"><i class="{{ skill.icon }}"></i> {{ skill.label }}</span>
                         {% endfor %}
                     {% else %}
                         <span class="skill-badge"><i class="ri-html5-fill"></i> HTML5</span>
@@ -25,7 +25,7 @@
                 <div class="skills-badges">
                     {% if profile and profile.backendSkills|length > 0 %}
                         {% for skill in profile.backendSkills %}
-                            <span class="skill-badge"><i class="ri-code-s-slash-line"></i> {{ skill }}</span>
+                            <span class="skill-badge"><i class="{{ skill.icon }}"></i> {{ skill.label }}</span>
                         {% endfor %}
                     {% else %}
                         <span class="skill-badge"><i class="ri-server-fill"></i> PHP 8</span>

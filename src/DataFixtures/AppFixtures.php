@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
+use App\Entity\Profile;
 use App\Entity\Project;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -15,39 +16,39 @@ class AppFixtures extends Fixture
     private const PROJECTS = [
         [
             'title'       => 'PMS-Itylon',
-            'description' => 'Gestion de réservations de locations saisonnières avec tableau de bord, suivi des clients et statistiques via graphiques interactifs.',
+            'description' => 'Application de gestion de réservations de maisons de vacances.',
             'images'      => ['PMS-itylon.png'],
-            'techStack'   => ['PHP', 'MySQL', 'JavaScript', 'ChartJS'],
+            'techStack'   => ['HTML', 'CSS', 'JS', 'Chartjs', 'MySQL', 'PHP'],
         ],
         [
-            'title'       => 'Gestion de stock',
-            'description' => 'Inventaire et étiquetage de produits avec recherche, filtres et impression d\'étiquettes depuis l\'interface.',
+            'title'       => 'Logiciel de gestion des produits',
+            'description' => "Solution Web d'inventaire et d'étiquetage de produits d'une boutique.",
             'images'      => ['inventaire.png'],
-            'techStack'   => ['Symfony', 'Doctrine', 'MySQL'],
+            'techStack'   => ['Symfony', 'ORM (Doctrine)', 'HTML', 'CSS', 'JS'],
         ],
         [
-            'title'       => 'Atlantis-RP',
-            'description' => 'Site communautaire GTA-RP présentant les règles, l\'équipe et les actualités du serveur roleplay.',
+            'title'       => 'Atlantis-rp',
+            'description' => 'Site pour un serveur GTA-RP.',
             'images'      => ['atlantis.png'],
-            'techStack'   => ['HTML', 'CSS', 'JavaScript'],
+            'techStack'   => ['HTML', 'CSS', 'JS'],
         ],
         [
-            'title'       => 'Résidence Itylon',
-            'description' => 'Site vitrine de location saisonnière avec galerie, tarifs et formulaire de contact intégré.',
+            'title'       => 'Residence-Itylon',
+            'description' => 'Site pour une résidence de location saisonnière.',
             'images'      => ['itylon.png'],
-            'techStack'   => ['PHP', 'HTML', 'CSS'],
+            'techStack'   => ['HTML', 'CSS', 'JS', 'PHP'],
         ],
         [
             'title'       => 'Portfolio',
-            'description' => 'Portfolio personnel développé sous Symfony, présentant mes projets, compétences et un formulaire de contact.',
+            'description' => 'Mon propre Portfolio.',
             'images'      => ['portfolio.png'],
-            'techStack'   => ['Symfony', 'PHP', 'HTML/CSS'],
+            'techStack'   => ['HTML', 'CSS', 'JS'],
         ],
         [
             'title'       => "Trièves Connect'",
-            'description' => 'Site vitrine pour un magasin informatique local, avec présentation des services, produits et coordonnées.',
+            'description' => "Site pour un magasin d'informatique.",
             'images'      => ['trieves.png'],
-            'techStack'   => ['PHP', 'HTML', 'CSS'],
+            'techStack'   => ['HTML', 'CSS', 'JS', 'PHP'],
         ],
     ];
 
@@ -59,6 +60,7 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $this->loadProjects($manager);
+        $this->loadProfile($manager);
         $this->loadAdminUser($manager);
 
         $manager->flush();
@@ -76,6 +78,35 @@ class AppFixtures extends Fixture
 
             $manager->persist($project);
         }
+    }
+
+    private function loadProfile(ObjectManager $manager): void
+    {
+        $profile = new Profile();
+        $profile->setAboutText(
+            "J'ai commencé à coder par curiosité, simplement pour comprendre… puis pour me simplifier la vie avec de petits scripts PHP. " .
+            "En 2020, j'ai créé mon premier site web et là, ça a fait tilt : j'ai su que c'était ce que je voulais faire de ma vie.\n\n" .
+            "En 2023, j'ai décidé de me lancer sérieusement dans une reconversion, en autodidacte, en parallèle de ma vie de famille et de mon travail. " .
+            "J'ai alors commencé à créer des sites pour des amis, ainsi que des applications web pour l'entreprise familiale et la boutique d'un ami.\n\n" .
+            "Curieux de nature, j'apprends vite, je m'adapte facilement et j'aime comprendre ce qui se cache derrière les outils que j'utilise. " .
+            "Le web est pour moi un terrain de jeu infini, un espace d'exploration où chaque problème devient une occasion d'apprendre. " .
+            "Patient, rigoureux et déterminé, je progresse en continu avec le souci de bien faire. " .
+            "Mon parcours autodidacte reflète ma persévérance et ma volonté de toujours aller plus loin."
+        );
+        $profile->setFrontendSkills([
+            ['label' => 'HTML',       'icon' => 'ri-html5-fill'],
+            ['label' => 'CSS',        'icon' => 'ri-css3-fill'],
+            ['label' => 'JavaScript', 'icon' => 'ri-javascript-fill'],
+            ['label' => 'Boostrap',   'icon' => 'ri-bootstrap-fill'],
+        ]);
+        $profile->setBackendSkills([
+            ['label' => 'PHP',    'icon' => 'ri-code-s-slash-line'],
+            ['label' => 'Symfony','icon' => 'devicon-symfony-original'],
+            ['label' => 'MySQL',  'icon' => 'ri-database-2-fill'],
+            ['label' => 'GitHub', 'icon' => 'ri-github-fill'],
+        ]);
+
+        $manager->persist($profile);
     }
 
     private function loadAdminUser(ObjectManager $manager): void

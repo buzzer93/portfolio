@@ -8,8 +8,8 @@ use App\Entity\Profile;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
@@ -23,16 +23,8 @@ class ProfileType extends AbstractType
                 'label' => 'À propos de moi',
                 'attr' => ['rows' => 10],
             ])
-            ->add('frontendSkills', TextType::class, [
-                'label' => 'Compétences Front-end',
-                'help'  => 'Séparées par des virgules : HTML5, CSS3, JavaScript',
-                'required' => false,
-            ])
-            ->add('backendSkills', TextType::class, [
-                'label' => 'Compétences Back-end & Outils',
-                'help'  => 'Séparées par des virgules : PHP 8, Symfony, MySQL',
-                'required' => false,
-            ])
+            ->add('frontendSkills', HiddenType::class)
+            ->add('backendSkills', HiddenType::class)
             ->add('photoFile', FileType::class, [
                 'label' => 'Photo de profil',
                 'mapped' => false,
@@ -58,13 +50,13 @@ class ProfileType extends AbstractType
                 ],
             ]);
 
-        $arrayToString = new CallbackTransformer(
-            static fn(array $v): string => implode(', ', $v),
-            static fn(string $v): array => array_values(array_filter(array_map('trim', explode(',', $v)))),
+        $jsonTransformer = new CallbackTransformer(
+            static fn(array $v): string => json_encode($v, JSON_UNESCAPED_UNICODE),
+            static fn(string $v): array => json_decode($v, true) ?? [],
         );
 
-        $builder->get('frontendSkills')->addModelTransformer($arrayToString);
-        $builder->get('backendSkills')->addModelTransformer($arrayToString);
+        $builder->get('frontendSkills')->addModelTransformer($jsonTransformer);
+        $builder->get('backendSkills')->addModelTransformer($jsonTransformer);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
