@@ -864,6 +864,8 @@ span,
 .contact-alerts{
     display: grid;
     gap: 0.5rem;
+    width: min(100%, 680px);
+    margin-inline: auto;
 }
 .contact-form,
 .contact-group{
@@ -876,6 +878,8 @@ span,
 }
 .contact-form{
     position: relative;
+    width: min(100%, 680px);
+    margin-inline: auto;
 }
 .contact-honeypot-wrapper{
     position: absolute;
@@ -885,6 +889,7 @@ span,
     overflow: hidden;
 }
 .contact-input{
+    width: 100%;
     padding: 0.875rem 1rem;
     border-radius: 0.5rem;
     background-color: var(--container-color);
@@ -906,6 +911,7 @@ span,
     color: var(--text-color);
 }
 .contact-label{
+    display: block;
     color: var(--title-color);
     font-size: var(--small-font-size);
     font-weight: var(--font-medium);
@@ -916,9 +922,9 @@ span,
     margin-left: 0.125rem;
 }
 .contact-form textarea{
-    height: 11rem;
+    min-height: 11rem;
     resize: none;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 .contact-button{
     justify-self: center;
@@ -927,7 +933,7 @@ span,
 .contact-message{
     font-size: var(--small-font-size);
     color: var(--title-color);
-    margin-top: 0.5rem;
+    margin-top: 0;
     text-align: center;
 }
 .contact-message--success{
