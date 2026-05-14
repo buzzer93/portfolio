@@ -74,6 +74,31 @@ window.addEventListener('scroll', () => {
     });
 });
 
+/*=============== INSTANT CONTACT HASH JUMP ===============*/
+const jumpToContactInstantly = () => {
+    if (window.location.hash !== '#contact') {
+        return;
+    }
+
+    const contactSection = document.getElementById('contact');
+    if (!contactSection) {
+        return;
+    }
+
+    const root = document.documentElement;
+    const previousBehavior = root.style.scrollBehavior;
+
+    root.style.scrollBehavior = 'auto';
+    contactSection.scrollIntoView({ behavior: 'auto', block: 'start' });
+
+    requestAnimationFrame(() => {
+        root.style.scrollBehavior = previousBehavior;
+    });
+};
+
+window.addEventListener('load', jumpToContactInstantly);
+window.addEventListener('hashchange', jumpToContactInstantly);
+
 /*=============== SCROLL REVEAL ANIMATION ===============*/
 const sr = ScrollReveal({ origin: 'top', distance: '60px', duration: 2000, reset: true });
 sr.reveal('.home-data, .home-social, .contact-container, .footer-container');

@@ -866,6 +866,10 @@ span,
     display: grid;
     row-gap: 1rem;
 }
+.contact-field{
+    display: grid;
+    row-gap: 0.375rem;
+}
 .contact-form{
     position: relative;
 }
@@ -889,8 +893,18 @@ span,
     box-shadow: 0px 0px 0px 3px hsla(var(--hue), 100%, 40%, 0.12),
                 0px 0px 16px hsla(var(--hue), 100%, 40%, 0.15);
 }
+.contact-input--invalid,
+.contact-input--invalid:focus{
+    border-color: hsl(0, 70%, 65%);
+    box-shadow: 0px 0px 0px 3px hsla(0, 70%, 65%, 0.15);
+}
 .contact-input::placeholder{
     color: var(--text-color);
+}
+.contact-error{
+    font-size: var(--small-font-size);
+    color: hsl(0, 70%, 65%);
+    margin-left: 0.125rem;
 }
 .contact-form textarea{
     height: 11rem;
