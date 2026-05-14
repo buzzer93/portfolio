@@ -31,7 +31,7 @@ Ce projet permet de :
 ### Côté public
 
 - Page d'accueil unique avec sections portfolio.
-- Affichage des projets actifs ordonnés.
+- Affichage des projets actifs ordonnés avec une gestion du markdown pour les descriptions.
 - Affichage du profil : texte, compétences, photo, CV.
 - Formulaire de contact serveur avec envoi d'email.
 
