@@ -1,133 +1,491 @@
 # Portfolio Nicolas Rodriguez
 
-Application Symfony 8 pour présenter un portfolio développeur, avec une vitrine publique, un formulaire de contact, et une interface d'administration sécurisée pour gérer le contenu.
+Application Symfony 8 pour présenter un portfolio développeur, avec une vitrine publique, un formulaire de contact et une interface d'administration sécurisée pour gérer le contenu.
 
-## Presentation
+---
+
+## Présentation
 
 Ce projet permet de :
-- Afficher une page portfolio (hero, a propos, competences, projets, contact).
-- Gerer dynamiquement les projets et le profil depuis un back-office admin.
+
+- Afficher une page portfolio : hero, à propos, compétences, projets, contact.
+- Gérer dynamiquement les projets et le profil depuis un back-office admin.
 - Envoyer les messages du formulaire de contact via Symfony Mailer.
-- Stocker les donnees avec Doctrine (SQLite en local par defaut).
+- Stocker les données avec Doctrine, SQLite par défaut en local.
 
-Stack principale :
-- PHP 8.4
-- Symfony 8
-- Doctrine ORM + Migrations
-- Twig
-- AssetMapper (JS/CSS)
+---
 
-## Features
+## Stack principale
 
-Fonctionnalites cote public :
+| Couche | Technologie |
+|---|---|
+| Backend | PHP 8.4, Symfony 8, Doctrine ORM + Migrations |
+| Frontend | Twig, Tailwind CSS, AssetMapper |
+| Base de données | SQLite par défaut |
+| Mailer | Symfony Mailer |
+
+---
+
+## Fonctionnalités
+
+### Côté public
+
 - Page d'accueil unique avec sections portfolio.
-- Affichage des projets actifs ordonnes.
-- Affichage du profil (texte, competences, photo, CV).
+- Affichage des projets actifs ordonnés.
+- Affichage du profil : texte, compétences, photo, CV.
 - Formulaire de contact serveur avec envoi d'email.
 
-Fonctionnalites cote admin :
-- Authentification admin (`/admin/login`).
-- Tableau de bord admin.
-- CRUD projets : creation, edition, suppression.
-- Statut projet actif/inactif : les projets inactifs sont masques du site public.
-- Section "Projets inactifs" dans le dashboard avec action de reactivation en un clic.
-- Reordonnancement des projets.
-- Upload, suppression et reorganisation des images projets (ordre du carousel).
-- Edition du profil (a propos, competences frontend/backend).
-- Upload/remplacement photo de profil et CV (PDF).
-- Nettoyage automatique des anciens fichiers remplaces (images/CV/projets) sur le disque.
-- Commande console pour mettre a jour les credentials admin (email + mot de passe).
+### Côté administration
 
-Securite :
-- Acces `/admin` reserve au role `ROLE_ADMIN`.
+- Authentification admin : `/admin/login`.
+- Tableau de bord admin.
+- CRUD projets : création, édition, suppression.
+- Statut projet actif/inactif : les projets inactifs sont masqués du site public.
+- Section "Projets inactifs" dans le dashboard avec réactivation en un clic.
+- Réordonnancement des projets.
+- Upload, suppression et réorganisation des images projets.
+- Édition du profil : à propos, compétences frontend/backend/outils.
+- Upload / remplacement photo de profil.
+- Upload / remplacement CV PDF.
+- Nettoyage automatique des anciens fichiers remplacés sur le disque.
+- Commande console pour mettre à jour les credentials admin : email + mot de passe.
+
+### Sécurité
+
+- Accès `/admin` réservé au rôle `ROLE_ADMIN`.
 - Protection CSRF sur la suppression des projets.
 - Protection CSRF sur la bascule actif/inactif des projets.
+- Authentification Symfony Security.
 
-## Installation
+---
 
-### 1) Prerequis
+## Installation locale
+
+### 1. Prérequis
 
 - PHP 8.4+
 - Composer
-- Symfony CLI (recommande)
+- Symfony CLI (recommandé)
+- Extension PHP SQLite activée
+- Extension PHP `intl` (recommandée)
 
-### 2) Cloner et installer les dependances
+### 2. Cloner le projet
 
 ```bash
 git clone https://github.com/buzzer93/portfolio.git
 cd portfolio
+```
+
+### 3. Installer les dépendances
+
+```bash
 composer install
 ```
 
-### 3) Configurer l'environnement
+### 4. Configurer l'environnement
 
-Le projet fournit deja un `.env` de base (SQLite local et Mailer null).
+Le projet fournit un `.env` de base. Pour une configuration locale personnalisée :
 
-Optionnel pour du local personnalise :
 ```bash
 cp .env .env.local
 ```
 
 Variables utiles :
-- `DATABASE_URL` (par defaut: SQLite dans `var/data.db`)
-- `ADMIN_EMAIL`
-- `ADMIN_PASSWORD`
-- `MAILER_DSN`
 
-### 4) Initialiser la base de donnees
+```dotenv
+APP_ENV=dev
+APP_DEBUG=1
+DATABASE_URL="sqlite:///%kernel.project_dir%/var/data.db"
+ADMIN_EMAIL="admin@example.com"
+ADMIN_PASSWORD="Admin1234!"
+MAILER_DSN=null://null
+```
+
+> `ADMIN_EMAIL` et `ADMIN_PASSWORD` sont utilisées par les fixtures pour créer le compte administrateur. Définissez-les avant de lancer les fixtures.
+
+### 5. Base de données SQLite
+
+Le projet utilise SQLite par défaut. La commande `doctrine:database:create` peut ne pas fonctionner selon la version de Doctrine DBAL. Il faut alors créer le fichier manuellement :
 
 ```bash
-php bin/console doctrine:database:create --if-not-exists
+mkdir -p var
+touch var/data.db
+```
+
+Puis lancer les migrations :
+
+```bash
 php bin/console doctrine:migrations:migrate -n
+```
+
+### 6. Fixtures
+
+Les fixtures permettent de charger un utilisateur admin, des projets de démonstration et un profil de démonstration.
+
+```bash
 php bin/console doctrine:fixtures:load -n
 ```
 
-Les fixtures creent notamment :
-- un utilisateur admin (`ADMIN_EMAIL` / `ADMIN_PASSWORD`)
-- des projets de demonstration
-- un profil de demonstration
+> **Attention :** cette commande vide les tables avant de recharger les données.
 
-### 5) Lancer le serveur
+Le compte admin créé utilise les valeurs de `.env.local`. Si elles ne sont pas définies, les valeurs par défaut sont :
+
+| Variable | Valeur par défaut |
+| --- | --- |
+| `ADMIN_EMAIL` | `admin@portfolio.local` |
+| `ADMIN_PASSWORD` | `changeme` |
+
+Pour ajouter les données sans vider la base :
+
+```bash
+php bin/console doctrine:fixtures:load --append -n
+```
+
+Si la commande `doctrine:fixtures:load` n'existe pas, installer le bundle :
+
+```bash
+composer require doctrine/doctrine-fixtures-bundle --dev
+```
+
+> En production, les fixtures ne sont généralement pas utilisées, car le bundle est installé en dépendance dev.
+
+### 7. Assets Tailwind / AssetMapper
+
+Après installation ou après un `git pull`, reconstruire les assets :
+
+```bash
+php bin/console tailwind:build
+```
+
+> **Important :** si les assets générés sont absents, le site peut être cassé visuellement, voire provoquer une erreur selon la configuration.
+
+### 8. Lancer le serveur en local
 
 ```bash
 symfony serve
 ```
 
-Puis ouvrir :
-- Site public : http://127.0.0.1:8000
-- Admin : http://127.0.0.1:8000/admin/login
+| URL | Accès |
+|---|---|
+| `http://127.0.0.1:8000` | Site public |
+| `http://127.0.0.1:8000/admin/login` | Interface admin |
 
-### 6) Lancer les tests
+---
+
+## Tests
 
 ```bash
 php bin/phpunit
 ```
 
+---
+
 ## Commandes utiles
 
-Mettre a jour les credentials admin en mode interactif :
-
 ```bash
+# Mettre à jour les credentials admin
 php bin/console app:admin:update-credentials
-```
 
-Appliquer les migrations (obligatoire apres un pull) :
-
-```bash
+# Appliquer les migrations
 php bin/console doctrine:migrations:migrate -n
-```
 
-Si vous rencontrez une erreur SQL de type "no such column", appliquez les migrations puis videz le cache :
-
-```bash
-php bin/console doctrine:migrations:migrate -n
+# Vider le cache
 php bin/console cache:clear
+
+# Reconstruire Tailwind
+php bin/console tailwind:build
+
+# Compiler les assets AssetMapper
+php bin/console asset-map:compile
 ```
 
-## Notes
+---
 
-- Les images sont stockees dans `public/images`.
-- Les photos de profil sont stockees dans `public/images/profile`.
-- Les CV sont stockes dans `public/files`.
-- Quand un fichier est retire depuis l'admin (ou remplace), il est supprime physiquement du dossier correspondant.
-- En production, configurez un vrai `MAILER_DSN`.
+## Structure des fichiers uploadés
+
+| Type | Dossier |
+|---|---|
+| Images projets | `public/images/` |
+| Photos de profil | `public/images/profile/` |
+| CV (PDF) | `public/files/` |
+
+Quand un fichier est retiré depuis l'admin ou remplacé, il est supprimé physiquement du dossier correspondant.
+
+---
+
+## Déploiement production
+
+Exemple de déploiement sur un VPS Ubuntu avec Caddy et PHP-FPM.
+
+### 1. Se placer dans le projet
+
+```bash
+cd /opt/nicolas-rodriguez
+```
+
+### 2. Récupérer les dernières modifications
+
+```bash
+git pull
+```
+
+Si Git bloque à cause d'un fichier local non suivi (exemple) :
+
+```text
+error: The following untracked working tree files would be overwritten by merge:
+    assets/img/inventaire.png
+```
+
+Sauvegarder le fichier, le supprimer, puis relancer le pull :
+
+```bash
+mkdir -p ~/backup-nicolas-rodriguez
+cp assets/img/inventaire.png ~/backup-nicolas-rodriguez/inventaire.png
+rm assets/img/inventaire.png
+git pull
+```
+
+### 3. Installer les dépendances de production
+
+```bash
+composer install --no-dev --optimize-autoloader
+```
+
+### 4. Configurer `.env.local`
+
+```bash
+nano .env.local
+```
+
+Exemple :
+
+```dotenv
+APP_ENV=prod
+APP_DEBUG=0
+DATABASE_URL="sqlite:///%kernel.project_dir%/var/data.db"
+MAILER_DSN="null://null"
+```
+
+> En production réelle, remplacer `MAILER_DSN` par un vrai service d'envoi d'emails.
+
+### 5. Initialiser SQLite
+
+```bash
+mkdir -p var
+touch var/data.db
+```
+
+### 6. Régler les droits
+
+Le serveur web doit pouvoir écrire dans `var/` (cache, logs, base SQLite) :
+
+```bash
+sudo chown -R buzzer93:www-data var
+
+sudo find var -type d -exec chmod 775 {} \;
+sudo find var -type f -exec chmod 664 {} \;
+
+sudo setfacl -R -m u:www-data:rwX -m u:buzzer93:rwX var
+sudo setfacl -dR -m u:www-data:rwX -m u:buzzer93:rwX var
+```
+
+### 7. Appliquer les migrations
+
+```bash
+APP_ENV=prod APP_DEBUG=0 php bin/console doctrine:migrations:migrate --no-interaction
+```
+
+### 8. Compiler les assets
+
+```bash
+APP_ENV=prod APP_DEBUG=0 php bin/console tailwind:build --minify
+APP_ENV=prod APP_DEBUG=0 php bin/console asset-map:compile
+```
+
+### 9. Vider le cache
+
+```bash
+APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear
+```
+
+### 10. Redémarrer les services
+
+```bash
+sudo systemctl restart php8.4-fpm
+sudo systemctl reload caddy
+```
+
+### 11. Tester
+
+```bash
+curl -I https://nicolas-rodriguez.fr
+```
+
+Réponse attendue :
+
+```text
+HTTP/2 200
+```
+
+---
+
+## Configuration Caddy
+
+Le fichier de configuration se trouve généralement ici :
+
+```text
+/etc/caddy/Caddyfile
+```
+
+```bash
+sudo nano /etc/caddy/Caddyfile
+```
+
+Exemple de configuration :
+
+```caddy
+www.nicolas-rodriguez.fr, nicolas-rodriguez.fr {
+    root * /opt/nicolas-rodriguez/public
+
+    php_fastcgi unix//run/php/php8.4-fpm.sock
+
+    file_server
+
+    log {
+        output file /var/log/caddy/nicolas-rodriguez.log
+    }
+
+    tls ncls.rodriguez38@gmail.com {
+        protocols tls1.2 tls1.3
+    }
+}
+```
+
+> **Attention :** la directive correcte est `file_server` (et non `file_servers`).
+
+```bash
+# Vérifier la configuration
+sudo caddy validate --config /etc/caddy/Caddyfile
+
+# Formater le fichier
+sudo caddy fmt --overwrite /etc/caddy/Caddyfile
+
+# Recharger Caddy
+sudo systemctl reload caddy
+```
+
+---
+
+## Vérifier PHP-FPM
+
+```bash
+# Lister les sockets disponibles
+ls /run/php/
+```
+
+Exemple attendu : `php8.4-fpm.sock`
+
+Si le socket est différent, adapter la ligne Caddy :
+
+```caddy
+php_fastcgi unix//run/php/php8.4-fpm.sock
+```
+
+```bash
+# Vérifier le service
+sudo systemctl status php8.4-fpm
+
+# Voir les logs PHP-FPM
+sudo journalctl -u php8.4-fpm -n 80 --no-pager
+```
+
+---
+
+## Logs et diagnostic
+
+### Logs Symfony
+
+```bash
+# En dev
+tail -n 80 var/log/dev.log
+
+# En prod
+tail -n 80 var/log/prod.log
+```
+
+Si `prod.log` n'existe pas, vérifier l'environnement actif :
+
+```bash
+grep -E "APP_ENV|APP_DEBUG|DATABASE_URL" .env .env.local 2>/dev/null
+```
+
+### Logs Caddy
+
+```bash
+sudo tail -n 80 /var/log/caddy/nicolas-rodriguez.log
+sudo journalctl -u caddy -n 80 --no-pager
+```
+
+### Erreur 500 en production
+
+Une erreur HTTP 500 signifie que Caddy fonctionne, mais que Symfony ou PHP rencontre une erreur.
+
+Vérifications à faire :
+
+```bash
+tail -n 120 var/log/*.log
+sudo journalctl -u php8.4-fpm -n 80 --no-pager
+sudo tail -n 80 /var/log/caddy/nicolas-rodriguez.log
+```
+
+Causes fréquentes :
+
+- Cache Symfony incorrect.
+- Permissions insuffisantes sur `var/`.
+- Base SQLite non créée.
+- Migrations non appliquées.
+- Assets Tailwind ou AssetMapper non compilés.
+- Mauvais socket PHP-FPM dans Caddy.
+- Variable `APP_ENV` ou `DATABASE_URL` incorrecte.
+
+Commandes de correction courantes :
+
+```bash
+cd /opt/nicolas-rodriguez
+
+sudo chown -R buzzer93:www-data var
+sudo find var -type d -exec chmod 775 {} \;
+sudo find var -type f -exec chmod 664 {} \;
+sudo setfacl -R -m u:www-data:rwX -m u:buzzer93:rwX var
+sudo setfacl -dR -m u:www-data:rwX -m u:buzzer93:rwX var
+
+APP_ENV=prod APP_DEBUG=0 php bin/console doctrine:migrations:migrate --no-interaction
+APP_ENV=prod APP_DEBUG=0 php bin/console tailwind:build --minify
+APP_ENV=prod APP_DEBUG=0 php bin/console asset-map:compile
+APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear
+
+sudo systemctl restart php8.4-fpm
+sudo systemctl reload caddy
+```
+
+---
+
+## Checklist après un `git pull` en production
+
+```bash
+cd /opt/nicolas-rodriguez
+
+git pull
+
+composer install --no-dev --optimize-autoloader
+
+APP_ENV=prod APP_DEBUG=0 php bin/console doctrine:migrations:migrate --no-interaction
+
+APP_ENV=prod APP_DEBUG=0 php bin/console tailwind:build --minify
+APP_ENV=prod APP_DEBUG=0 php bin/console asset-map:compile
+
+APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear
+
+sudo systemctl restart php8.4-fpm
+sudo systemctl reload caddy
+```
