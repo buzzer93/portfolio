@@ -40,6 +40,7 @@ Ce projet permet de :
 - Authentification admin : `/admin/login`.
 - Tableau de bord admin.
 - CRUD projets : création, édition, suppression.
+- Description des projets en Markdown : titres, listes, liens, code, gras, italique.
 - Statut projet actif/inactif : les projets inactifs sont masqués du site public.
 - Section "Projets inactifs" dans le dashboard avec réactivation en un clic.
 - Réordonnancement des projets.
@@ -219,6 +220,8 @@ php bin/console asset-map:compile
 
 Quand un fichier est retiré depuis l'admin ou remplacé, il est supprimé physiquement du dossier correspondant.
 
+Les descriptions de projets peuvent être rédigées en Markdown depuis l'administration. Le rendu est affiché sur la page d'accueil et dans la modale projet.
+
 ---
 
 ## Déploiement production
@@ -272,17 +275,31 @@ touch var/data.db
 
 ### 6. Régler les droits
 
-Le serveur web doit pouvoir écrire dans `var/` (cache, logs, base SQLite) :
+Le serveur web doit pouvoir écrire dans `var/` (cache, logs, base SQLite) ainsi que dans les dossiers d'upload publics :
+
+- `public/images/`
+- `public/images/profile/`
+- `public/files/`
+
+Exemple avec PHP-FPM exécuté par `www-data` :
 
 ```bash
 sudo chown -R buzzer93:www-data var
+sudo chown -R buzzer93:www-data public/images public/files
 
 sudo find var -type d -exec chmod 775 {} \;
 sudo find var -type f -exec chmod 664 {} \;
 
+sudo find public/images -type d -exec chmod 2775 {} \;
+sudo find public/images -type f -exec chmod 664 {} \;
+sudo find public/files -type d -exec chmod 2775 {} \;
+sudo find public/files -type f -exec chmod 664 {} \;
+
 sudo setfacl -R -m u:www-data:rwX -m u:buzzer93:rwX var
 sudo setfacl -dR -m u:www-data:rwX -m u:buzzer93:rwX var
 ```
+
+> Si les uploads échouent avec un message du type `Unable to write in the "/opt/.../public/images" directory`, le problème vient généralement des permissions Linux sur `public/images`, `public/images/profile` ou `public/files`, pas du code Symfony.
 
 ### 7. Appliquer les migrations
 
@@ -437,11 +454,13 @@ Causes fréquentes :
 
 - Cache Symfony incorrect.
 - Permissions insuffisantes sur `var/`.
+- Permissions insuffisantes sur `public/images/`, `public/images/profile/` ou `public/files/`.
 - Base SQLite non créée.
 - Migrations non appliquées.
 - Assets Tailwind ou AssetMapper non compilés.
 - Mauvais socket PHP-FPM dans Caddy.
 - Variable `APP_ENV` ou `DATABASE_URL` incorrecte.
+- Dépendances Composer non réinstallées après ajout du support Markdown des descriptions de projet.
 
 Commandes de correction courantes :
 
@@ -449,8 +468,16 @@ Commandes de correction courantes :
 cd /opt/nicolas-rodriguez
 
 sudo chown -R buzzer93:www-data var
+sudo chown -R buzzer93:www-data public/images public/files
+
 sudo find var -type d -exec chmod 775 {} \;
 sudo find var -type f -exec chmod 664 {} \;
+
+sudo find public/images -type d -exec chmod 2775 {} \;
+sudo find public/images -type f -exec chmod 664 {} \;
+sudo find public/files -type d -exec chmod 2775 {} \;
+sudo find public/files -type f -exec chmod 664 {} \;
+
 sudo setfacl -R -m u:www-data:rwX -m u:buzzer93:rwX var
 sudo setfacl -dR -m u:www-data:rwX -m u:buzzer93:rwX var
 
@@ -476,6 +503,12 @@ composer install --no-dev --optimize-autoloader
 
 APP_ENV=prod APP_DEBUG=0 php bin/console doctrine:migrations:migrate --no-interaction
 
+sudo chown -R buzzer93:www-data public/images public/files
+sudo find public/images -type d -exec chmod 2775 {} \;
+sudo find public/images -type f -exec chmod 664 {} \;
+sudo find public/files -type d -exec chmod 2775 {} \;
+sudo find public/files -type f -exec chmod 664 {} \;
+
 APP_ENV=prod APP_DEBUG=0 php bin/console tailwind:build --minify
 APP_ENV=prod APP_DEBUG=0 php bin/console asset-map:compile
 
@@ -483,4 +516,29 @@ APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear
 
 sudo systemctl restart php8.4-fpm
 sudo systemctl reload caddy
+```
+
+---
+
+## Notes techniques
+
+### Support Markdown des projets
+
+Le rendu Markdown des descriptions de projet utilise `twig/markdown-extra` et `league/commonmark`.
+
+Après un `git pull` contenant cette évolution, toujours relancer :
+
+```bash
+composer install --no-dev --optimize-autoloader
+```
+
+### Erreur Composer `Undefined array key "entrypoints"`
+
+Si Symfony Flex remonte cette erreur pendant une commande Composer, vérifier que `assets/controllers.json` contient bien une structure valide :
+
+```json
+{
+    "controllers": {},
+    "entrypoints": []
+}
 ```

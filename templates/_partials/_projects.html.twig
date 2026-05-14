@@ -3,6 +3,7 @@
     <div class="projects-container container grid">
         {% for project in projects %}
             {% set descriptionHtml = project.description|markdown_to_html %}
+            {% set descriptionPreview = descriptionHtml|striptags|trim %}
             {% set projectInfo = {
                 title: project.title,
                 descriptionHtml: descriptionHtml,
@@ -18,7 +19,7 @@
                 <img src="{{ asset('images/' ~ project.images[0]) }}" alt="{{ project.title }}" class="projects-img" />
                 <div class="projects-modal">
                     <h2 class="projects-title">{{ project.title }}</h2>
-                    <div class="projects-description">{{ descriptionHtml }}</div>
+                    <p class="projects-description">{{ descriptionPreview }}</p>
                     <button class="projects-button"
                             data-action="project-modal#open"
                             data-project-info="{{ projectInfo }}">

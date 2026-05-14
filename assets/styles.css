@@ -580,10 +580,13 @@ span,
     color: var(--text-color);
     line-height: 1.5;
     text-align: left;
-    max-height: 7rem;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
     overflow: hidden;
     margin-bottom: 0.75rem;
     width: 100%;
+    white-space: normal;
 }
 
 .projects-description > :first-child,
