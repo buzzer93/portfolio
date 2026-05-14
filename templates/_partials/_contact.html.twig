@@ -7,37 +7,42 @@
         {% set successMessages = app.flashes('success') %}
         {% set errorMessages = app.flashes('error') %}
 
-        {% for message in successMessages %}
-            <p class="contact-message contact-message--success">{{ message }}</p>
-        {% endfor %}
-        {% for message in errorMessages %}
-            <p class="contact-message contact-message--error">{{ message }}</p>
-        {% endfor %}
-        {% for error in contactForm.vars.errors %}
-            <p class="contact-message contact-message--error">{{ error.message }}</p>
-        {% endfor %}
+        <div class="contact-alerts" aria-live="polite">
+            {% for message in successMessages %}
+                <p class="contact-message contact-message--success">{{ message }}</p>
+            {% endfor %}
+            {% for message in errorMessages %}
+                <p class="contact-message contact-message--error">{{ message }}</p>
+            {% endfor %}
+            {% for error in contactForm.vars.errors %}
+                <p class="contact-message contact-message--error">{{ error.message }}</p>
+            {% endfor %}
+        </div>
 
-{{ form_start(contactForm, { attr: { class: 'contact-form', id: 'contact-form' } }) }}
+        {{ form_start(contactForm, { attr: { class: 'contact-form', id: 'contact-form', novalidate: 'novalidate' } }) }}
             <div class="contact-honeypot-wrapper" aria-hidden="true">
                 {{ form_widget(contactForm.website) }}
             </div>
             {{ form_widget(contactForm.formStartedAt) }}
             <div class="contact-group">
                 <div class="contact-field">
-                    {{ form_widget(contactForm.name, { attr: { class: 'contact-input' ~ (contactForm.name.vars.errors|length ? ' contact-input--invalid' : ''), placeholder: 'Nom' } }) }}
+                    {{ form_label(contactForm.name, 'Nom', { label_attr: { class: 'contact-label' } }) }}
+                    {{ form_widget(contactForm.name, { attr: { class: 'contact-input' ~ (contactForm.name.vars.errors|length ? ' contact-input--invalid' : ''), placeholder: 'Votre nom' } }) }}
                     {% for error in contactForm.name.vars.errors %}
                         <p class="contact-error">{{ error.message }}</p>
                     {% endfor %}
                 </div>
                 <div class="contact-field">
-                    {{ form_widget(contactForm.email, { attr: { class: 'contact-input' ~ (contactForm.email.vars.errors|length ? ' contact-input--invalid' : ''), placeholder: 'Email' } }) }}
+                    {{ form_label(contactForm.email, 'Email', { label_attr: { class: 'contact-label' } }) }}
+                    {{ form_widget(contactForm.email, { attr: { class: 'contact-input' ~ (contactForm.email.vars.errors|length ? ' contact-input--invalid' : ''), placeholder: 'vous@email.com' } }) }}
                     {% for error in contactForm.email.vars.errors %}
                         <p class="contact-error">{{ error.message }}</p>
                     {% endfor %}
                 </div>
             </div>
             <div class="contact-field">
-                {{ form_widget(contactForm.message, { attr: { class: 'contact-input' ~ (contactForm.message.vars.errors|length ? ' contact-input--invalid' : ''), placeholder: 'Message', cols: '30', rows: '10' } }) }}
+                {{ form_label(contactForm.message, 'Message', { label_attr: { class: 'contact-label' } }) }}
+                {{ form_widget(contactForm.message, { attr: { class: 'contact-input' ~ (contactForm.message.vars.errors|length ? ' contact-input--invalid' : ''), placeholder: 'Expliquez votre besoin en quelques lignes...', cols: '30', rows: '10' } }) }}
                 {% for error in contactForm.message.vars.errors %}
                     <p class="contact-error">{{ error.message }}</p>
                 {% endfor %}
