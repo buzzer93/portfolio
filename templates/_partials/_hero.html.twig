@@ -28,6 +28,10 @@
             </div>
         </div>
         <div class="home-image">
+            {% set heroScale = profile and profile.heroImageScale ? profile.heroImageScale : 120 %}
+            {% set heroScaleFactor = heroScale / 100 %}
+            {% set heroX = profile and profile.heroImageX is not null ? profile.heroImageX : 0 %}
+            {% set heroY = profile and profile.heroImageY is not null ? profile.heroImageY : -120 %}
             <svg class="home-blob" viewBox="0 0 550 592" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <mask id="maskBorder" mask-type="alpha">
                     <path d="M263 48.1782C270.426 43.891 279.574 43.891 287 48.1782L501.157
@@ -47,12 +51,12 @@
                 <rect x="37" width="476" height="300" fill="url(#pattern3)" />
                 <defs>
                     <pattern id="pattern2" patternContentUnits="objectBoundingBox" width="1" height="1">
-                        <use href="#imageBorder" transform="matrix(0.00143057 0 0 0.00108108 0.0404062 0)" />
+                        <use href="#imageBorder" transform="matrix({{ (0.00143057 * heroScaleFactor)|number_format(8, '.', '') }} 0 0 {{ (0.00108108 * heroScaleFactor)|number_format(8, '.', '') }} 0.0404062 0)" />
                     </pattern>
                     <pattern id="pattern3" patternContentUnits="objectBoundingBox" width="1" height="1">
-                        <use href="#imageBorder" transform="matrix(0.00143057 0 0 0.00226984 0.0404062 0)" />
+                        <use href="#imageBorder" transform="matrix({{ (0.00143057 * heroScaleFactor)|number_format(8, '.', '') }} 0 0 {{ (0.00226984 * heroScaleFactor)|number_format(8, '.', '') }} 0.0404062 0)" />
                     </pattern>
-                    <image class="home-img" id="imageBorder" width="704" height="1017.5"
+                    <image class="home-img" id="imageBorder" x="{{ heroX }}" y="{{ heroY }}" width="704" height="1017.5"
                         href="{{ profile and profile.photoPath ? asset('images/profile/' ~ profile.photoPath) : asset('images/portait_nico-removebg.png') }}" />
                 </defs>
             </svg>

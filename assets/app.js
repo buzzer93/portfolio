@@ -4,10 +4,39 @@ import ScrollReveal from 'scrollreveal';
 
 startStimulusApp();
 
+/*=============== LIGHT / DARK THEME ===============*/
+const themeButton = document.getElementById('nav-theme');
+const themeIcon = document.getElementById('theme-icon');
+const storedTheme = localStorage.getItem('portfolio-theme');
+
+const applyTheme = (theme) => {
+    const isLight = theme === 'light';
+    document.body.classList.toggle('light-theme', isLight);
+
+    if (themeIcon) {
+        themeIcon.classList.toggle('ri-sun-line', isLight);
+        themeIcon.classList.toggle('ri-moon-line', !isLight);
+    }
+
+    if (themeButton) {
+        themeButton.setAttribute('aria-label', isLight ? 'Activer le mode sombre' : 'Activer le mode clair');
+    }
+};
+
+applyTheme(storedTheme === 'light' ? 'light' : 'dark');
+
 /*=============== SHOW MENU ===============*/
 const navMenu = document.getElementById('nav-menu');
 const navToggle = document.getElementById('nav-toggle');
 const navClose = document.getElementById('nav-close');
+
+if (themeButton) {
+    themeButton.addEventListener('click', () => {
+        const nextTheme = document.body.classList.contains('light-theme') ? 'dark' : 'light';
+        applyTheme(nextTheme);
+        localStorage.setItem('portfolio-theme', nextTheme);
+    });
+}
 
 if (navToggle) {
     navToggle.addEventListener('click', () => navMenu.classList.add('show-menu'));

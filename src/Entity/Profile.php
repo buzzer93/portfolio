@@ -31,6 +31,18 @@ class Profile
     #[ORM\Column(type: 'json')]
     private array $backendSkills = [];
 
+    #[ORM\Column(type: 'json')]
+    private array $toolsSkills = [];
+
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
+    private int $heroImageX = 0;
+
+    #[ORM\Column(type: 'integer', options: ['default' => -120])]
+    private int $heroImageY = -120;
+
+    #[ORM\Column(type: 'integer', options: ['default' => 120])]
+    private int $heroImageScale = 120;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -92,6 +104,54 @@ class Profile
     public function setBackendSkills(array $backendSkills): static
     {
         $this->backendSkills = $backendSkills;
+
+        return $this;
+    }
+
+    public function getToolsSkills(): array
+    {
+        return $this->toolsSkills;
+    }
+
+    public function setToolsSkills(array $toolsSkills): static
+    {
+        $this->toolsSkills = $toolsSkills;
+
+        return $this;
+    }
+
+    public function getHeroImageX(): int
+    {
+        return $this->heroImageX;
+    }
+
+    public function setHeroImageX(int $heroImageX): static
+    {
+        $this->heroImageX = $heroImageX;
+
+        return $this;
+    }
+
+    public function getHeroImageY(): int
+    {
+        return $this->heroImageY;
+    }
+
+    public function setHeroImageY(int $heroImageY): static
+    {
+        $this->heroImageY = $heroImageY;
+
+        return $this;
+    }
+
+    public function getHeroImageScale(): int
+    {
+        return $this->heroImageScale;
+    }
+
+    public function setHeroImageScale(int $heroImageScale): static
+    {
+        $this->heroImageScale = $heroImageScale;
 
         return $this;
     }

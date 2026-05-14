@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -25,13 +26,26 @@ class ProfileType extends AbstractType
             ])
             ->add('frontendSkills', HiddenType::class)
             ->add('backendSkills', HiddenType::class)
+            ->add('toolsSkills', HiddenType::class)
+            ->add('heroImageX', IntegerType::class, [
+                'label' => 'Décalage horizontal (X)',
+                'attr' => ['min' => -250, 'max' => 250],
+            ])
+            ->add('heroImageY', IntegerType::class, [
+                'label' => 'Décalage vertical (Y)',
+                'attr' => ['min' => -350, 'max' => 250],
+            ])
+            ->add('heroImageScale', IntegerType::class, [
+                'label' => 'Zoom (%)',
+                'attr' => ['min' => 60, 'max' => 180],
+            ])
             ->add('photoFile', FileType::class, [
                 'label' => 'Photo de profil',
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [
                     new File(
-                        maxSize: '1M',
+                        maxSize: '10M',
                         mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
                         mimeTypesMessage: 'Format accepté : JPG, PNG, WEBP',
                     ),
@@ -57,6 +71,7 @@ class ProfileType extends AbstractType
 
         $builder->get('frontendSkills')->addModelTransformer($jsonTransformer);
         $builder->get('backendSkills')->addModelTransformer($jsonTransformer);
+        $builder->get('toolsSkills')->addModelTransformer($jsonTransformer);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

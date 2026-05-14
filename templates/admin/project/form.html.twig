@@ -9,6 +9,80 @@
 {% endblock %}
 
 {% block content %}
+<style>
+    .skill-tags-empty {
+        font-size: 0.75rem;
+        color: var(--text);
+        opacity: 0.5;
+        align-self: center;
+    }
+
+    .skill-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 0.25rem;
+        padding: 0.2rem 0.45rem;
+        font-size: 0.78rem;
+        color: var(--title);
+    }
+
+    .skill-tag-remove {
+        background: none;
+        border: none;
+        color: var(--text);
+        cursor: pointer;
+        font-size: 0.9rem;
+        padding: 0 0.1rem;
+        line-height: 1;
+        opacity: 0.55;
+        margin-left: 0.1rem;
+    }
+
+    .skill-tag-remove:hover {
+        color: var(--danger);
+        opacity: 1;
+    }
+
+    .stack-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.375rem;
+        min-height: 2.25rem;
+        margin-bottom: 0.75rem;
+        padding: 0.5rem;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+    }
+
+    .stack-selects {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.5rem;
+    }
+
+    .stack-category {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+
+    .stack-category-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--accent);
+        font-weight: 600;
+    }
+
+    @media (max-width: 900px) {
+        .stack-selects { grid-template-columns: 1fr; }
+    }
+</style>
+
 {{ form_start(form, {attr: {enctype: 'multipart/form-data', class: 'form-grid'}}) }}
 
     <div class="card">
@@ -32,10 +106,46 @@
                 {{ form_errors(form.githubUrl) }}
             </div>
 
-            <div class="form-group">
-                {{ form_label(form.techStack) }}
-                {{ form_widget(form.techStack, {attr: {class: 'form-control', placeholder: 'PHP, Symfony, MySQL'}}) }}
-                <span class="help">{{ form_help(form.techStack) }}</span>
+            <div class="form-group" data-controller="project-stack">
+                <label>Stack technique</label>
+
+                <div class="stack-selects">
+                    <div class="stack-category">
+                        <span class="stack-category-label">Front-end</span>
+                        <div data-project-stack-target="frontendTags" class="skill-tags stack-tags"></div>
+                        <select class="form-control" data-category="frontend" data-action="change->project-stack#addFromSelect">
+                            <option value="">Ajouter une techno...</option>
+                            {% for skill in frontendSkillOptions|default([]) %}
+                                <option value="{{ skill }}">{{ skill }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="stack-category">
+                        <span class="stack-category-label">Back-end</span>
+                        <div data-project-stack-target="backendTags" class="skill-tags stack-tags"></div>
+                        <select class="form-control" data-category="backend" data-action="change->project-stack#addFromSelect">
+                            <option value="">Ajouter une techno...</option>
+                            {% for skill in backendSkillOptions|default([]) %}
+                                <option value="{{ skill }}">{{ skill }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="stack-category">
+                        <span class="stack-category-label">Outils</span>
+                        <div data-project-stack-target="toolsTags" class="skill-tags stack-tags"></div>
+                        <select class="form-control" data-category="tools" data-action="change->project-stack#addFromSelect">
+                            <option value="">Ajouter un outil...</option>
+                            {% for skill in toolSkillOptions|default([]) %}
+                                <option value="{{ skill }}">{{ skill }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <span class="help">Choisissez dans les listes pour ajouter des tags sans faute de frappe.</span>
+                {{ form_widget(form.techStack, {attr: {'data-project-stack-target': 'output'}}) }}
                 {{ form_errors(form.techStack) }}
             </div>
 

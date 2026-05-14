@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -42,9 +43,8 @@ class ProjectType extends AbstractType
                     new Url(message: 'Veuillez saisir une URL valide.'),
                 ],
             ])
-            ->add('techStack', TextType::class, [
-                'label' => 'Stack technique',
-                'help' => 'Séparées par des virgules : PHP, Symfony, MySQL',
+            ->add('techStack', HiddenType::class, [
+                'required' => false,
             ])
             ->add('position', IntegerType::class, [
                 'label' => 'Position',
@@ -70,8 +70,8 @@ class ProjectType extends AbstractType
             ]);
 
         $builder->get('techStack')->addModelTransformer(new CallbackTransformer(
-            static fn(array $tech): string => implode(', ', $tech),
-            static fn(string $tech): array => array_values(array_filter(array_map('trim', explode(',', $tech)))),
+            static fn(array $tech): string => json_encode(self::normalizeTechStack($tech), JSON_UNESCAPED_UNICODE) ?: '{}',
+            static fn(string $tech): array => self::normalizeTechStack(self::decodeTechStack($tech)),
         ));
     }
 
@@ -80,5 +80,68 @@ class ProjectType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Project::class,
         ]);
+    }
+
+    /**
+     * @param array<string, mixed>|list<mixed> $value
+     *
+     * @return array{frontend: list<string>, backend: list<string>, tools: list<string>}
+     */
+    private static function normalizeTechStack(array $value): array
+    {
+        $frontend = self::sanitizeTechCategory($value['frontend'] ?? []);
+        $backend = self::sanitizeTechCategory($value['backend'] ?? []);
+        $tools = self::sanitizeTechCategory($value['tools'] ?? []);
+
+        if (array_key_exists('frontend', $value) || array_key_exists('backend', $value) || array_key_exists('tools', $value)) {
+            return [
+                'frontend' => $frontend,
+                'backend' => $backend,
+                'tools' => $tools,
+            ];
+        }
+
+        foreach (self::sanitizeTechCategory($value) as $tech) {
+            $tools[] = $tech;
+        }
+
+        return [
+            'frontend' => $frontend,
+            'backend' => $backend,
+            'tools' => array_values(array_unique($tools)),
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>|list<mixed>
+     */
+    private static function decodeTechStack(string $value): array
+    {
+        if (trim($value) === '') {
+            return [];
+        }
+
+        $decoded = json_decode($value, true);
+
+        return is_array($decoded) ? $decoded : [];
+    }
+
+    /**
+     * @param mixed $values
+     *
+     * @return list<string>
+     */
+    private static function sanitizeTechCategory(mixed $values): array
+    {
+        if (!is_array($values)) {
+            return [];
+        }
+
+        $normalized = array_map(
+            static fn (mixed $item): string => trim((string) $item),
+            array_filter($values, static fn (mixed $item): bool => is_string($item) || is_numeric($item)),
+        );
+
+        return array_values(array_unique(array_filter($normalized, static fn (string $item): bool => $item !== '')));
     }
 }

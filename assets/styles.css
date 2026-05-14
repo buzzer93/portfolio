@@ -55,6 +55,15 @@
     --z-fixed: 100;
 }
 
+body.light-theme {
+    --first-color-dark: hsl(220, 25%, 20%);
+    --title-color: hsl(220, 28%, 18%);
+    --text-color: hsl(220, 16%, 32%);
+    --body-color: hsl(220, 35%, 96%);
+    --container-color: hsl(0, 0%, 100%);
+    --border-color: hsl(220, 20%, 84%);
+}
+
 /*========== Responsive typography ==========*/
 @media screen and (min-width: 1152px) {
     :root {
@@ -125,6 +134,7 @@ svg {
 
 /*=============== REUSABLE CSS CLASSES ===============*/
 .container {
+    width: auto;
     max-width: 1120px;
     margin-inline: 1.5rem;
 }
@@ -136,6 +146,7 @@ svg {
 
 .section {
     padding-block: 6rem 2.5rem;
+    padding-inline: 1rem;
 }
 
 .section-title,
@@ -204,7 +215,13 @@ svg {
     color: var(--first-color);
 }
 
-.nav-toggle,
+.nav-toggle {
+    display: flex;
+    font-size: 1.25rem;
+    color: var(--title-color);
+    cursor: pointer;
+}
+
 .nav-close {
     display: flex;
     font-size: 1.25rem;
@@ -272,6 +289,10 @@ svg {
     top: 0;
     left: 0;
     z-index: -1;
+}
+
+body.light-theme .blur-header::after {
+    background-color: hsla(220, 35%, 95%, 0.72);
 }
 
 /* Active link */
@@ -373,7 +394,7 @@ span,
     justify-self: center;
 }
 .home-blob{
-    width: 320px;
+    width: 285px;
 }
 .home-blob path{
     stroke: var(--first-color);
@@ -559,6 +580,7 @@ span,
     color: var(--text-color);
     text-align: center;
     line-height: 1.5;
+    white-space: pre-line;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -773,6 +795,7 @@ span,
     font-size: var(--small-font-size);
     color: var(--text-color);
     line-height: 1.7;
+    white-space: pre-line;
 }
 
 .project-modal-tech-label {
@@ -786,6 +809,24 @@ span,
 }
 
 .project-modal-tech {
+    display: grid;
+    gap: 0.875rem;
+}
+
+.project-modal-tech-group {
+    display: grid;
+    gap: 0.45rem;
+}
+
+.project-modal-tech-title {
+    font-size: 0.72rem;
+    color: var(--first-color);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: var(--font-semi-bold);
+}
+
+.project-modal-tech-list {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -1002,7 +1043,7 @@ span,
 }
 .home-blob,
 .about-blob{
-    width: 400px;
+    width: 360px;
 }
 
 .about-data{
@@ -1053,7 +1094,7 @@ span,
     }
 
     .home-blob{
-        width: 550px;
+        width: 500px;
     }
     .home-content{
         row-gap: 3rem;
@@ -1076,7 +1117,7 @@ span,
         margin-bottom: 3rem;
     }
     .skills-groups {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 3rem;
     }
     .projects-container{

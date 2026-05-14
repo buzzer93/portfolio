@@ -5,21 +5,28 @@
 
 {% block content %}
 <style>
-    .profile-grid {
+    .profile-layout {
         display: grid;
-        grid-template-columns: 1fr 300px;
-        gap: 1.5rem;
-        align-items: start;
+        gap: 1.25rem;
     }
-    @media (max-width: 900px) {
-        .profile-grid { grid-template-columns: 1fr; }
-    }
-    .profile-col { display: flex; flex-direction: column; gap: 1.25rem; }
 
-    .skills-cols {
+    .profile-row-top {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1.25rem;
+    }
+
+    @media (max-width: 900px) {
+        .profile-row-top { grid-template-columns: 1fr; }
+    }
+
+    .skills-cols {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+    }
+    @media (max-width: 1024px) {
+        .skills-cols { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 640px) {
         .skills-cols { grid-template-columns: 1fr; }
@@ -76,22 +83,72 @@
 
 {{ form_start(form, {attr: {enctype: 'multipart/form-data'}}) }}
 
-<div class="profile-grid">
+<div class="profile-layout">
 
-    {# ── Left column : about + skills ── #}
-    <div class="profile-col">
-
+    <div class="profile-row-top">
         <div class="card">
-            <div class="form-group">
-                {{ form_label(form.aboutText) }}
-                {{ form_widget(form.aboutText, {attr: {class: 'form-control'}}) }}
-                {{ form_errors(form.aboutText) }}
+            <h2 style="font-size:0.8125rem; font-weight:600; color:var(--title); margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.06em;">Photo de profil</h2>
+
+            {% if profile.photoPath %}
+            <div style="margin-bottom:1rem;">
+                <img src="{{ asset('images/profile/' ~ profile.photoPath) }}"
+                     alt="Photo actuelle"
+                     style="width:72px; height:72px; object-fit:cover; border-radius:50%; border:2px solid var(--accent);" />
+                <p style="font-size:0.73rem; color:var(--text); margin-top:0.375rem; opacity:0.7;">Photo actuelle — téléverser une nouvelle pour la remplacer</p>
             </div>
+            {% endif %}
+
+            <div class="form-group">
+                {{ form_label(form.photoFile) }}
+                {{ form_widget(form.photoFile, {attr: {class: 'form-control'}}) }}
+                {{ form_errors(form.photoFile) }}
+            </div>
+
+            <div style="display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:0.5rem; margin-top:0.75rem;">
+                <div class="form-group" style="margin:0;">
+                    {{ form_label(form.heroImageX) }}
+                    {{ form_widget(form.heroImageX, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.heroImageX) }}
+                </div>
+                <div class="form-group" style="margin:0;">
+                    {{ form_label(form.heroImageY) }}
+                    {{ form_widget(form.heroImageY, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.heroImageY) }}
+                </div>
+                <div class="form-group" style="margin:0;">
+                    {{ form_label(form.heroImageScale) }}
+                    {{ form_widget(form.heroImageScale, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.heroImageScale) }}
+                </div>
+            </div>
+            <p style="font-size:0.72rem; color:var(--text); opacity:0.7; margin-top:0.5rem;">
+                Ajuste la position de la photo dans le SVG de la home (X, Y) et son zoom en pourcentage.
+            </p>
         </div>
 
         <div class="card">
-            <h2 style="font-size:0.8125rem; font-weight:600; color:var(--title); margin-bottom:1.25rem; text-transform:uppercase; letter-spacing:0.06em;">Compétences</h2>
-            <div class="skills-cols">
+            <h2 style="font-size:0.8125rem; font-weight:600; color:var(--title); margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.06em;">CV</h2>
+
+            {% if profile.cvPath %}
+            <p style="font-size:0.8rem; color:var(--success); margin-bottom:0.75rem;">
+                <i class="ri-file-pdf-line"></i>
+                CV en ligne —
+                <a href="{{ asset('files/' ~ profile.cvPath) }}" target="_blank" style="color:var(--accent);">télécharger</a>
+                · téléverser un nouveau fichier pour le remplacer
+            </p>
+            {% endif %}
+
+            <div class="form-group">
+                {{ form_label(form.cvFile) }}
+                {{ form_widget(form.cvFile, {attr: {class: 'form-control'}}) }}
+                {{ form_errors(form.cvFile) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 style="font-size:0.8125rem; font-weight:600; color:var(--title); margin-bottom:1.25rem; text-transform:uppercase; letter-spacing:0.06em;">Compétences</h2>
+        <div class="skills-cols">
 
                 {# Front-end #}
                 <div class="form-group">
@@ -119,9 +176,9 @@
                     {{ form_errors(form.frontendSkills) }}
                 </div>
 
-                {# Back-end & tools #}
+                {# Back-end #}
                 <div class="form-group">
-                    <label style="font-size:0.8125rem; font-weight:500; color:var(--title); margin-bottom:0.5rem; display:block;">Back-end & Outils</label>
+                    <label style="font-size:0.8125rem; font-weight:500; color:var(--title); margin-bottom:0.5rem; display:block;">Back-end</label>
                     <div
                         data-controller="skill-list"
                         data-skill-list-skills-value="{{ profile.backendSkills|json_encode }}"
@@ -145,62 +202,51 @@
                     {{ form_errors(form.backendSkills) }}
                 </div>
 
-            </div>
-            <p style="font-size:0.73rem; color:var(--text); opacity:0.6; margin-top:0.75rem;">
-                Icônes&nbsp;: <a href="https://remixicon.com" target="_blank" style="color:var(--accent);">remixicon.com</a>
-                ou <a href="https://devicon.dev" target="_blank" style="color:var(--accent);">devicon.dev</a>
-            </p>
-        </div>
+                {# Outils #}
+                <div class="form-group">
+                    <label style="font-size:0.8125rem; font-weight:500; color:var(--title); margin-bottom:0.5rem; display:block;">Outils</label>
+                    <div
+                        data-controller="skill-list"
+                        data-skill-list-skills-value="{{ profile.toolsSkills|json_encode }}"
+                    >
+                        <div data-skill-list-target="tags" class="skill-tags"></div>
+                        <div class="skill-add-row">
+                            <input type="text"
+                                   data-skill-list-target="labelInput"
+                                   placeholder="Git"
+                                   class="form-control"
+                                   data-action="keydown->skill-list#addOnEnter">
+                            <input type="text"
+                                   data-skill-list-target="iconInput"
+                                   placeholder="ri-github-fill"
+                                   class="form-control"
+                                   data-action="keydown->skill-list#addOnEnter">
+                            <button type="button" class="btn btn-ghost btn-sm" data-action="skill-list#add">+</button>
+                        </div>
+                        {{ form_widget(form.toolsSkills, {attr: {'data-skill-list-target': 'output'}}) }}
+                    </div>
+                    {{ form_errors(form.toolsSkills) }}
+                </div>
 
+        </div>
+        <p style="font-size:0.73rem; color:var(--text); opacity:0.6; margin-top:0.75rem;">
+            Icônes&nbsp;: <a href="https://remixicon.com" target="_blank" style="color:var(--accent);">remixicon.com</a>
+            ou <a href="https://devicon.dev" target="_blank" style="color:var(--accent);">devicon.dev</a>
+        </p>
     </div>
 
-    {# ── Right column : photo + cv + save ── #}
-    <div class="profile-col">
-
-        <div class="card">
-            <h2 style="font-size:0.8125rem; font-weight:600; color:var(--title); margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.06em;">Photo de profil</h2>
-
-            {% if profile.photoPath %}
-            <div style="margin-bottom:1rem;">
-                <img src="{{ asset('images/profile/' ~ profile.photoPath) }}"
-                     alt="Photo actuelle"
-                     style="width:72px; height:72px; object-fit:cover; border-radius:50%; border:2px solid var(--accent);" />
-                <p style="font-size:0.73rem; color:var(--text); margin-top:0.375rem; opacity:0.7;">Photo actuelle — téléverser une nouvelle pour la remplacer</p>
-            </div>
-            {% endif %}
-
-            <div class="form-group">
-                {{ form_label(form.photoFile) }}
-                {{ form_widget(form.photoFile, {attr: {class: 'form-control'}}) }}
-                {{ form_errors(form.photoFile) }}
-            </div>
+    <div class="card">
+        <div class="form-group">
+            {{ form_label(form.aboutText) }}
+            {{ form_widget(form.aboutText, {attr: {class: 'form-control'}}) }}
+            {{ form_errors(form.aboutText) }}
         </div>
+    </div>
 
-        <div class="card">
-            <h2 style="font-size:0.8125rem; font-weight:600; color:var(--title); margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.06em;">CV</h2>
-
-            {% if profile.cvPath %}
-            <p style="font-size:0.8rem; color:var(--success); margin-bottom:0.75rem;">
-                <i class="ri-file-pdf-line"></i>
-                CV en ligne —
-                <a href="{{ asset('files/' ~ profile.cvPath) }}" target="_blank" style="color:var(--accent);">télécharger</a>
-                · téléverser un nouveau fichier pour le remplacer
-            </p>
-            {% endif %}
-
-            <div class="form-group">
-                {{ form_label(form.cvFile) }}
-                {{ form_widget(form.cvFile, {attr: {class: 'form-control'}}) }}
-                {{ form_errors(form.cvFile) }}
-            </div>
-        </div>
-
-        <div>
-            <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">
-                <i class="ri-save-line"></i> Enregistrer
-            </button>
-        </div>
-
+    <div>
+        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">
+            <i class="ri-save-line"></i> Enregistrer
+        </button>
     </div>
 
 </div>

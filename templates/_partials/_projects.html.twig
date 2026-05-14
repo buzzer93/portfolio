@@ -6,7 +6,11 @@
                 title: project.title,
                 description: project.description,
                 images: project.images,
-                tech: project.techStack,
+                tech: {
+                    frontend: project.frontendTechStack,
+                    backend: project.backendTechStack,
+                    tools: project.toolsTechStack
+                },
                 githubUrl: project.githubUrl
             }|json_encode %}
             <article class="projects-card">
@@ -15,7 +19,7 @@
                     <h2 class="projects-title">{{ project.title }}</h2>
                     <p class="projects-description">{{ project.description }}</p>
                     <div class="projects-tech">
-                        {% for tag in project.techStack|slice(0, 3) %}
+                        {% for tag in project.allTechStack|slice(0, 4) %}
                             <span class="tech-tag">{{ tag }}</span>
                         {% endfor %}
                     </div>

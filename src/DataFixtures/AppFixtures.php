@@ -18,42 +18,66 @@ class AppFixtures extends Fixture
             'title'       => 'PMS-Itylon',
             'description' => 'Application de gestion de réservations de maisons de vacances.',
             'images'      => ['PMS-itylon.png'],
-            'techStack'   => ['HTML', 'CSS', 'JS', 'Chartjs', 'MySQL', 'PHP'],
+            'techStack'   => [
+                'frontend' => ['HTML', 'CSS', 'JavaScript'],
+                'backend' => ['PHP', 'MySQL'],
+                'tools' => ['Chart.js'],
+            ],
             'githubUrl'   => 'https://github.com/buzzer93/PMS-itylon',
         ],
         [
             'title'       => 'Logiciel de gestion des produits',
             'description' => "Solution Web d'inventaire et d'étiquetage de produits d'une boutique.",
             'images'      => ['inventaire.png'],
-            'techStack'   => ['Symfony', 'ORM (Doctrine)', 'HTML', 'CSS', 'JS'],
+            'techStack'   => [
+                'frontend' => ['HTML', 'CSS', 'JavaScript'],
+                'backend' => ['Symfony'],
+                'tools' => ['ORM (Doctrine)'],
+            ],
             'githubUrl'   => null,
         ],
         [
             'title'       => 'Atlantis-rp',
             'description' => 'Site pour un serveur GTA-RP.',
             'images'      => ['atlantis.png'],
-            'techStack'   => ['HTML', 'CSS', 'JS'],
+            'techStack'   => [
+                'frontend' => ['HTML', 'CSS', 'JavaScript'],
+                'backend' => [],
+                'tools' => [],
+            ],
             'githubUrl'   => null,
         ],
         [
             'title'       => 'Residence-Itylon',
             'description' => 'Site pour une résidence de location saisonnière.',
             'images'      => ['itylon.png'],
-            'techStack'   => ['HTML', 'CSS', 'JS', 'PHP'],
+            'techStack'   => [
+                'frontend' => ['HTML', 'CSS', 'JavaScript'],
+                'backend' => ['PHP'],
+                'tools' => [],
+            ],
             'githubUrl'   => null,
         ],
         [
             'title'       => 'Portfolio',
             'description' => 'Mon propre Portfolio.',
             'images'      => ['portfolio.png'],
-            'techStack'   => ['HTML', 'CSS', 'JS'],
+            'techStack'   => [
+                'frontend' => ['HTML', 'CSS', 'JavaScript'],
+                'backend' => [],
+                'tools' => [],
+            ],
             'githubUrl'   => 'https://github.com/buzzer93/portfolio',
         ],
         [
             'title'       => "Trièves Connect'",
             'description' => "Site pour un magasin d'informatique.",
             'images'      => ['trieves.png'],
-            'techStack'   => ['HTML', 'CSS', 'JS', 'PHP'],
+            'techStack'   => [
+                'frontend' => ['HTML', 'CSS', 'JavaScript'],
+                'backend' => ['PHP'],
+                'tools' => [],
+            ],
             'githubUrl'   => null,
         ],
     ];
@@ -110,7 +134,11 @@ class AppFixtures extends Fixture
             ['label' => 'PHP',    'icon' => 'ri-code-s-slash-line'],
             ['label' => 'Symfony','icon' => 'devicon-symfony-original'],
             ['label' => 'MySQL',  'icon' => 'ri-database-2-fill'],
+        ]);
+        $profile->setToolsSkills([
+            ['label' => 'Git',    'icon' => 'ri-git-branch-line'],
             ['label' => 'GitHub', 'icon' => 'ri-github-fill'],
+            ['label' => 'Docker', 'icon' => 'ri-tools-fill'],
         ]);
 
         $manager->persist($profile);
