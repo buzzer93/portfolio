@@ -2,9 +2,10 @@
     <h2 class="section-title">Mes <span>Projets</span></h2>
     <div class="projects-container container grid">
         {% for project in projects %}
+            {% set descriptionHtml = project.description|markdown_to_html %}
             {% set projectInfo = {
                 title: project.title,
-                description: project.description,
+                descriptionHtml: descriptionHtml,
                 images: project.images,
                 tech: {
                     frontend: project.frontendTechStack,
@@ -17,12 +18,7 @@
                 <img src="{{ asset('images/' ~ project.images[0]) }}" alt="{{ project.title }}" class="projects-img" />
                 <div class="projects-modal">
                     <h2 class="projects-title">{{ project.title }}</h2>
-                    <p class="projects-description">{{ project.description }}</p>
-                    <div class="projects-tech">
-                        {% for tag in project.allTechStack|slice(0, 4) %}
-                            <span class="tech-tag">{{ tag }}</span>
-                        {% endfor %}
-                    </div>
+                    <div class="projects-description">{{ descriptionHtml }}</div>
                     <button class="projects-button"
                             data-action="project-modal#open"
                             data-project-info="{{ projectInfo }}">

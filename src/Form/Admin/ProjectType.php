@@ -34,6 +34,7 @@ class ProjectType extends AbstractType
                 'label' => 'Description',
                 'constraints' => [new NotBlank()],
                 'attr' => ['rows' => 4],
+                'help' => 'Markdown supporte : titres, listes, liens, code, gras, italique.',
             ])
             ->add('githubUrl', UrlType::class, [
                 'label' => 'Lien du repo GitHub',

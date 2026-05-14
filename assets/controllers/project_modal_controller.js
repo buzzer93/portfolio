@@ -20,7 +20,7 @@ export default class extends Controller {
         this.currentIndex = 0;
 
         this.titleTarget.textContent = data.title;
-        this.descriptionTarget.textContent = data.description;
+        this.descriptionTarget.innerHTML = typeof data.descriptionHtml === 'string' ? data.descriptionHtml : '';
         const githubUrl = typeof data.githubUrl === 'string' ? data.githubUrl.trim() : '';
         if (githubUrl.length > 0) {
             this.githubLinkTarget.href = githubUrl;
