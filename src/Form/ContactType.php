@@ -20,7 +20,7 @@ class ContactType extends AbstractType
             ->add('name', TextType::class, [
                 'constraints' => [
                     new NotBlank(message: 'Veuillez entrer votre nom.'),
-                    new Length(min: 2, max: 100),
+                    new Length(min: 2, max: 100, minMessage: 'Le nom doit contenir au moins {{ limit }} caractères.'),
                 ],
             ])
             ->add('email', EmailType::class, [
@@ -32,7 +32,7 @@ class ContactType extends AbstractType
             ->add('message', TextareaType::class, [
                 'constraints' => [
                     new NotBlank(message: 'Veuillez écrire un message.'),
-                    new Length(min: 10, max: 2000),
+                    new Length(min: 10, max: 2000, minMessage: 'Le message doit contenir au moins {{ limit }} caractères.'),
                 ],
             ]);
     }

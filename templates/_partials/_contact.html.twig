@@ -11,7 +11,11 @@
             <p class="contact-message contact-message--error">{{ message }}</p>
         {% endfor %}
 
-        {{ form_start(contactForm, { attr: { class: 'contact-form', id: 'contact-form' } }) }}
+        {% if contactForm.submitted and not contactForm.valid %}
+    <script>document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });</script>
+{% endif %}
+
+{{ form_start(contactForm, { attr: { class: 'contact-form', id: 'contact-form' } }) }}
             <div class="contact-group">
                 {{ form_widget(contactForm.name, { attr: { class: 'contact-input', placeholder: 'Nom' } }) }}
                 {{ form_widget(contactForm.email, { attr: { class: 'contact-input', placeholder: 'Email' } }) }}
