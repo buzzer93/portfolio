@@ -22,7 +22,7 @@ Ce projet permet de :
 | Backend | PHP 8.4, Symfony 8, Doctrine ORM + Migrations |
 | Frontend | Twig, Tailwind CSS, AssetMapper |
 | Base de données | SQLite par défaut |
-| Mailer | Symfony Mailer |
+| Mailer | Symfony Mailer + Brevo SMTP |
 
 ---
 
@@ -98,10 +98,18 @@ APP_DEBUG=1
 DATABASE_URL="sqlite:///%kernel.project_dir%/var/data.db"
 ADMIN_EMAIL="admin@example.com"
 ADMIN_PASSWORD="Admin1234!"
-MAILER_DSN=null://null
+
+# Mailer — laisser null://null pour désactiver l'envoi en local
+# Pour tester avec Brevo, renseigner les trois variables ci-dessous
+MAILER_FROM=contact@nicolas-rodriguez.fr
+MAILER_BREVO_LOGIN=your_brevo_login%40example.com
+MAILER_BREVO_KEY=your_brevo_smtp_key
+MAILER_DSN=smtp://${MAILER_BREVO_LOGIN}:${MAILER_BREVO_KEY}@smtp-relay.brevo.com:587
 ```
 
 > `ADMIN_EMAIL` et `ADMIN_PASSWORD` sont utilisées par les fixtures pour créer le compte administrateur. Définissez-les avant de lancer les fixtures.
+>
+> `MAILER_BREVO_LOGIN` doit être encodé en URL : remplacer `@` par `%40`.
 
 ### 5. Base de données SQLite
 
@@ -247,10 +255,13 @@ Exemple :
 APP_ENV=prod
 APP_DEBUG=0
 DATABASE_URL="sqlite:///%kernel.project_dir%/var/data.db"
-MAILER_DSN="null://null"
+MAILER_FROM=contact@nicolas-rodriguez.fr
+MAILER_BREVO_LOGIN=your_brevo_login%40example.com
+MAILER_BREVO_KEY=your_brevo_smtp_key
+MAILER_DSN=smtp://${MAILER_BREVO_LOGIN}:${MAILER_BREVO_KEY}@smtp-relay.brevo.com:587
 ```
 
-> En production réelle, remplacer `MAILER_DSN` par un vrai service d'envoi d'emails.
+> Remplacer `MAILER_BREVO_LOGIN` et `MAILER_BREVO_KEY` par les vraies valeurs issues de Brevo (**Settings → SMTP & API**). Le `@` du login doit être encodé en `%40`.
 
 ### 5. Initialiser SQLite
 
