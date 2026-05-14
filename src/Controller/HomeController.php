@@ -9,6 +9,7 @@ use App\Repository\ProfileRepository;
 use App\Repository\ProjectRepository;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -19,8 +20,9 @@ class HomeController extends AbstractController
     public function __construct(
         private readonly ProjectRepository $projectRepository,
         private readonly ProfileRepository $profileRepository,
-    ) {
-    }
+        #[Autowire(env: 'MAILER_FROM')]
+        private readonly string $mailerFrom,
+    ) {}
 
     #[Route('/', name: 'home')]
     public function index(Request $request, MailerInterface $mailer): Response
@@ -32,7 +34,8 @@ class HomeController extends AbstractController
             $data = $form->getData();
 
             $email = (new TemplatedEmail())
-                ->from($data['email'])
+                ->from($this->mailerFrom)
+                ->replyTo($data['email'])
                 ->to('ncls.rodriguez38@gmail.com')
                 ->subject('Portfolio - Message de ' . $data['name'])
                 ->htmlTemplate('emails/contact.html.twig')

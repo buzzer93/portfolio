@@ -229,22 +229,6 @@ cd /opt/nicolas-rodriguez
 git pull
 ```
 
-Si Git bloque à cause d'un fichier local non suivi (exemple) :
-
-```text
-error: The following untracked working tree files would be overwritten by merge:
-    assets/img/inventaire.png
-```
-
-Sauvegarder le fichier, le supprimer, puis relancer le pull :
-
-```bash
-mkdir -p ~/backup-nicolas-rodriguez
-cp assets/img/inventaire.png ~/backup-nicolas-rodriguez/inventaire.png
-rm assets/img/inventaire.png
-git pull
-```
-
 ### 3. Installer les dépendances de production
 
 ```bash
