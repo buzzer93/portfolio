@@ -18,7 +18,7 @@ Ce projet permet de :
 ## Stack principale
 
 | Couche | Technologie |
-|---|---|
+| --- | --- |
 | Backend | PHP 8.4, Symfony 8, Doctrine ORM + Migrations |
 | Frontend | Twig, Tailwind CSS, AssetMapper |
 | Base de données | SQLite par défaut |
@@ -166,7 +166,7 @@ symfony serve
 ```
 
 | URL | Accès |
-|---|---|
+| --- | --- |
 | `http://127.0.0.1:8000` | Site public |
 | `http://127.0.0.1:8000/admin/login` | Interface admin |
 
@@ -204,7 +204,7 @@ php bin/console asset-map:compile
 ## Structure des fichiers uploadés
 
 | Type | Dossier |
-|---|---|
+| --- | --- |
 | Images projets | `public/images/` |
 | Photos de profil | `public/images/profile/` |
 | CV (PDF) | `public/files/` |
