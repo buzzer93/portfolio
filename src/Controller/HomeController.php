@@ -27,8 +27,28 @@ class HomeController extends AbstractController
     #[Route('/', name: 'home')]
     public function index(Request $request, MailerInterface $mailer): Response
     {
-        $form = $this->createForm(ContactType::class);
+        $form = $this->createForm(ContactType::class, null, [
+            'form_started_at' => time(),
+        ]);
         $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $honeypot = (string) $form->get('website')->getData();
+            $startedAtRaw = (string) $form->get('formStartedAt')->getData();
+            $startedAt = ctype_digit($startedAtRaw) ? (int) $startedAtRaw : 0;
+            $elapsedSeconds = time() - $startedAt;
+
+            $isBotSubmission = '' !== trim($honeypot)
+                || $startedAt <= 0
+                || $elapsedSeconds < 3
+                || $elapsedSeconds > 7200;
+
+            if ($isBotSubmission) {
+                $this->addFlash('error', 'Échec de vérification anti-spam. Merci de réessayer.');
+
+                return $this->redirectToRoute('home', ['_fragment' => 'contact']);
+            }
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();

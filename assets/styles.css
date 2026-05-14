@@ -869,6 +869,13 @@ span,
 .contact-form{
     position: relative;
 }
+.contact-honeypot-wrapper{
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
 .contact-input{
     padding: 0.875rem 1rem;
     border-radius: 0.5rem;

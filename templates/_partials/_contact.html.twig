@@ -16,6 +16,11 @@
 {% endif %}
 
 {{ form_start(contactForm, { attr: { class: 'contact-form', id: 'contact-form' } }) }}
+            <div class="contact-honeypot-wrapper" aria-hidden="true">
+                {{ form_label(contactForm.website, 'Ne pas remplir ce champ') }}
+                {{ form_widget(contactForm.website) }}
+            </div>
+            {{ form_widget(contactForm.formStartedAt) }}
             <div class="contact-group">
                 {{ form_widget(contactForm.name, { attr: { class: 'contact-input', placeholder: 'Nom' } }) }}
                 {{ form_widget(contactForm.email, { attr: { class: 'contact-input', placeholder: 'Email' } }) }}
