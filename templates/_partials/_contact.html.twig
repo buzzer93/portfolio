@@ -11,7 +11,7 @@
             <p class="contact-message contact-message--error">{{ message }}</p>
         {% endfor %}
 
-        {% if contactForm.submitted and not contactForm.valid %}
+        {% if contactForm.vars.submitted %}
     <script>document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });</script>
 {% endif %}
 
