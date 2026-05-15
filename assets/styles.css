@@ -880,6 +880,10 @@ span,
     gap: 0.875rem;
 }
 
+.project-modal-github {
+    margin-top: 1rem;
+}
+
 .project-modal-tech-group {
     display: grid;
     gap: 0.45rem;
