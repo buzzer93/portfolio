@@ -2,7 +2,7 @@
     <h2 class="section-title">Mes <span>Projets</span></h2>
     <div class="projects-container container grid">
         {% for project in projects %}
-            {% set descriptionHtml = project.description|markdown_to_html %}
+            {% set descriptionHtml = (project.description|markdown_to_html) ~ '' %}
             {% set descriptionPreview = descriptionHtml|striptags|trim %}
             {% set projectInfo = {
                 title: project.title,
@@ -22,7 +22,7 @@
                     <p class="projects-description">{{ descriptionPreview }}</p>
                     <button class="projects-button"
                             data-action="project-modal#open"
-                            data-project-info="{{ projectInfo }}">
+                            data-project-info="{{ projectInfo|e('html_attr') }}">
                         Voir le projet <i class="ri-eye-line"></i>
                     </button>
                 </div>
