@@ -20,7 +20,7 @@ export default class extends Controller {
         this.currentIndex = 0;
 
         this.titleTarget.textContent = data.title;
-        this.descriptionTarget.innerHTML = typeof data.descriptionHtml === 'string' ? data.descriptionHtml : '';
+        this.descriptionTarget.innerHTML = this.resolveDescriptionHtml(data);
         const githubUrl = typeof data.githubUrl === 'string' ? data.githubUrl.trim() : '';
         if (githubUrl.length > 0) {
             this.githubLinkTarget.href = githubUrl;
@@ -96,6 +96,20 @@ export default class extends Controller {
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;');
+    }
+
+    resolveDescriptionHtml(data) {
+        const markdownHtml = typeof data.descriptionHtml === 'string' ? data.descriptionHtml.trim() : '';
+        if (markdownHtml.length > 0) {
+            return markdownHtml;
+        }
+
+        const plainDescription = typeof data.description === 'string' ? data.description.trim() : '';
+        if (plainDescription.length > 0) {
+            return this.escape(plainDescription).replace(/\r?\n/g, '<br>');
+        }
+
+        return '<p>Description indisponible.</p>';
     }
 
     renderTechGroups(tech) {
