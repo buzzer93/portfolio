@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ['overlay', 'title', 'description', 'tech', 'githubLink', 'slides', 'dots', 'prevBtn', 'nextBtn'];
+    static targets = ['overlay', 'title', 'description', 'githubLink', 'slides', 'dots', 'prevBtn', 'nextBtn'];
 
     connect() {
         this.images = [];
@@ -29,7 +29,6 @@ export default class extends Controller {
             this.githubLinkTarget.hidden = true;
             this.githubLinkTarget.removeAttribute('href');
         }
-        this.techTarget.innerHTML = this.renderTechGroups(data.tech);
 
         this.slidesTarget.innerHTML = this.images
             .map(img => `<div class="modal-slide"><img src="/images/${this.escape(img)}" alt="${this.escape(data.title)}"></div>`)
@@ -112,54 +111,4 @@ export default class extends Controller {
         return '<p>Description indisponible.</p>';
     }
 
-    renderTechGroups(tech) {
-        const groups = this.normalizeTechGroups(tech);
-        const labels = {
-            frontend: 'Front-end',
-            backend: 'Back-end',
-            tools: 'Outils',
-        };
-
-        return Object.entries(groups)
-            .filter(([, values]) => values.length > 0)
-            .map(([category, values]) => {
-                const tags = values
-                    .map((value) => `<span class="modal-tech-tag">${this.escape(value)}</span>`)
-                    .join('');
-
-                return `
-                    <div class="project-modal-tech-group">
-                        <span class="project-modal-tech-title">${labels[category]}</span>
-                        <div class="project-modal-tech-list">${tags}</div>
-                    </div>
-                `;
-            })
-            .join('');
-    }
-
-    normalizeTechGroups(tech) {
-        const empty = { frontend: [], backend: [], tools: [] };
-
-        if (Array.isArray(tech)) {
-            return {
-                frontend: [],
-                backend: [],
-                tools: tech.map((value) => String(value).trim()).filter((value) => value !== ''),
-            };
-        }
-
-        if (!tech || typeof tech !== 'object') {
-            return empty;
-        }
-
-        const sanitize = (values) => Array.isArray(values)
-            ? values.map((value) => String(value).trim()).filter((value) => value !== '')
-            : [];
-
-        return {
-            frontend: sanitize(tech.frontend),
-            backend: sanitize(tech.backend),
-            tools: sanitize(tech.tools),
-        };
-    }
 }

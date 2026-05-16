@@ -17,12 +17,10 @@ Ce projet permet de :
 
 ## Stack principale
 
-| Couche | Technologie |
-| --- | --- |
-| Backend | PHP 8.4, Symfony 8, Doctrine ORM + Migrations |
-| Frontend | Twig, Tailwind CSS, AssetMapper |
-| Base de données | SQLite par défaut |
-| Mailer | Symfony Mailer + Brevo SMTP |
+- **Backend** : PHP 8.4, Symfony 8, Doctrine ORM + Migrations
+- **Frontend** : Twig, Tailwind CSS, AssetMapper
+- **Base de données** : SQLite par défaut
+- **Mailer** : Symfony Mailer + Brevo SMTP
 
 ---
 

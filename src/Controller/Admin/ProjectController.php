@@ -6,7 +6,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\Project;
 use App\Form\Admin\ProjectType;
-use App\Repository\ProfileRepository;
 use App\Repository\ProjectRepository;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,12 +27,11 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/new', name: 'new')]
-    public function new(Request $request, EntityManagerInterface $em, ProfileRepository $profileRepository): Response
+    public function new(Request $request, EntityManagerInterface $em): Response
     {
         $project = new Project();
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
-        $skillOptions = $this->resolveSkillOptions($profileRepository);
 
         if ($form->isSubmitted() && $form->isValid()) {
             foreach ($form->get('imageFiles')->getData() as $file) {
@@ -52,18 +50,14 @@ class ProjectController extends AbstractController
         return $this->render('admin/project/form.html.twig', [
             'form'    => $form,
             'project' => $project,
-            'frontendSkillOptions' => $skillOptions['frontend'],
-            'backendSkillOptions' => $skillOptions['backend'],
-            'toolSkillOptions' => $skillOptions['tools'],
         ]);
     }
 
     #[Route('/{id}/edit', name: 'edit')]
-    public function edit(Project $project, Request $request, EntityManagerInterface $em, ProfileRepository $profileRepository): Response
+    public function edit(Project $project, Request $request, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
-        $skillOptions = $this->resolveSkillOptions($profileRepository);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $imageOrderRaw = $request->request->get('image_order', '');
@@ -131,9 +125,6 @@ class ProjectController extends AbstractController
         return $this->render('admin/project/form.html.twig', [
             'form'    => $form,
             'project' => $project,
-            'frontendSkillOptions' => $skillOptions['frontend'],
-            'backendSkillOptions' => $skillOptions['backend'],
-            'toolSkillOptions' => $skillOptions['tools'],
         ]);
     }
 
@@ -194,57 +185,6 @@ class ProjectController extends AbstractController
         $em->flush();
 
         return new JsonResponse(['ok' => true]);
-    }
-
-    /**
-     * @return array{frontend: list<string>, backend: list<string>, tools: list<string>}
-     */
-    private function resolveSkillOptions(ProfileRepository $profileRepository): array
-    {
-        $profile = $profileRepository->findProfile();
-
-        if ($profile === null) {
-            return [
-                'frontend' => [],
-                'backend' => [],
-                'tools' => [],
-            ];
-        }
-
-        $frontend = $this->extractProfileSkillLabels($profile->getFrontendSkills());
-        $backend = $this->extractProfileSkillLabels($profile->getBackendSkills());
-        $tools = $this->extractProfileSkillLabels($profile->getToolsSkills());
-
-        return [
-            'frontend' => $frontend,
-            'backend' => $backend,
-            'tools' => $tools,
-        ];
-    }
-
-    /**
-     * @param array<int, mixed> $skills
-     *
-     * @return list<string>
-     */
-    private function extractProfileSkillLabels(array $skills): array
-    {
-        $labels = [];
-
-        foreach ($skills as $skill) {
-            if (!is_array($skill)) {
-                continue;
-            }
-
-            $label = trim((string) ($skill['label'] ?? ''));
-            if ($label === '') {
-                continue;
-            }
-
-            $labels[] = $label;
-        }
-
-        return array_values(array_unique($labels));
     }
 
 }
