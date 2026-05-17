@@ -34,6 +34,12 @@ class ProjectType extends AbstractType
                 'attr' => ['rows' => 4],
                 'help' => 'Markdown supporte : titres, listes, liens, code, gras, italique.',
             ])
+            ->add('techStack', TextareaType::class, [
+                'label' => 'Stack technique',
+                'required' => false,
+                'attr' => ['rows' => 4],
+                'help' => 'Markdown supporté : listes, gras, liens, code.',
+            ])
             ->add('githubUrl', UrlType::class, [
                 'label' => 'Lien du repo GitHub',
                 'required' => false,

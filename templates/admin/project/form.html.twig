@@ -28,6 +28,13 @@
             </div>
 
             <div class="form-group">
+                {{ form_label(form.techStack) }}
+                {{ form_widget(form.techStack, {attr: {class: 'form-control'}}) }}
+                {{ form_help(form.techStack) }}
+                {{ form_errors(form.techStack) }}
+            </div>
+
+            <div class="form-group">
                 {{ form_label(form.githubUrl) }}
                 {{ form_widget(form.githubUrl, {attr: {class: 'form-control', placeholder: 'https://github.com/user/repo'}}) }}
                 {{ form_errors(form.githubUrl) }}

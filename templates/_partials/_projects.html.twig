@@ -4,10 +4,12 @@
         {% for project in projects %}
             {% set descriptionHtml = (project.description|markdown_to_html) ~ '' %}
             {% set descriptionPreview = descriptionHtml|striptags|trim %}
+            {% set techStackHtml = project.techStack ? (project.techStack|markdown_to_html) ~ '' : '' %}
             {% set projectInfo = {
                 title: project.title,
                 descriptionHtml: descriptionHtml,
                 description: project.description,
+                techStackHtml: techStackHtml,
                 images: project.images,
                 githubUrl: project.githubUrl
             }|json_encode %}

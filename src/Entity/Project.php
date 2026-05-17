@@ -31,6 +31,9 @@ class Project
     #[ORM\Column(type: 'integer')]
     private int $position = 0;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $techStack = null;
+
     #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $isActive = true;
 
@@ -110,6 +113,18 @@ class Project
     public function isActive(): bool
     {
         return $this->isActive;
+    }
+
+    public function getTechStack(): ?string
+    {
+        return $this->techStack;
+    }
+
+    public function setTechStack(?string $techStack): static
+    {
+        $this->techStack = $techStack;
+
+        return $this;
     }
 
     public function setIsActive(bool $isActive): static

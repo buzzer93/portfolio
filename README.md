@@ -19,7 +19,7 @@ Ce projet permet de :
 
 - **Backend** : PHP 8.4, Symfony 8, Doctrine ORM + Migrations
 - **Frontend** : Twig, Tailwind CSS, AssetMapper
-- **Base de données** : SQLite par défaut
+- **Base de données** : SQLite
 - **Mailer** : Symfony Mailer + Brevo SMTP
 
 ---
