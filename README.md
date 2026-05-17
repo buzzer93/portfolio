@@ -17,10 +17,29 @@ Ce projet permet de :
 
 ## Stack principale
 
-- **Backend** : PHP 8.4, Symfony 8, Doctrine ORM + Migrations
-- **Frontend** : Twig, Tailwind CSS, AssetMapper
-- **Base de données** : SQLite
-- **Mailer** : Symfony Mailer + Brevo SMTP
+### Backend
+- **PHP 8.4** avec `strict_types`
+- **Symfony 8.0** — Framework Bundle, Security, Form, Validator, Mailer, Messenger, HttpClient
+- **Doctrine ORM 3** + Doctrine Migrations — entités `User`, `Project`, `Profile`
+- **league/commonmark** — rendu Markdown des descriptions de projet (via `twig/markdown-extra`)
+
+### Frontend
+- **Tailwind CSS v4** (`@import "tailwindcss"`) via `symfonycasts/tailwind-bundle`, compilé avec AssetMapper
+- **Twig** — templates partials dans `templates/_partials/`, back-office dans `templates/admin/`
+- **Stimulus** (`@hotwired/stimulus` 3.2) — 2 controllers : `project_modal_controller`, `skill_list_controller`
+- **ScrollReveal 4** — animations d'apparition au scroll
+- **RemixIcon + Devicon** — icônes (CDN)
+- **Thème clair/sombre** — géré en Vanilla JS via `localStorage`
+
+### Base de données
+- **SQLite** (`var/data.db`) en local et production
+- 9 migrations Doctrine
+
+### Infrastructure & outils
+- **Symfony Mailer** + **Brevo SMTP** — envoi des messages du formulaire de contact
+- **AssetMapper** — gestion des assets JS/CSS sans bundler
+- **PHPUnit 13** — tests
+- **Symfony CLI** — serveur de développement
 
 ---
 
