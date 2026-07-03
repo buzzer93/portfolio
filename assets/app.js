@@ -25,11 +25,7 @@ const applyTheme = (theme) => {
 
 applyTheme(storedTheme === 'light' ? 'light' : 'dark');
 
-/*=============== SHOW MENU ===============*/
-const navMenu = document.getElementById('nav-menu');
-const navToggle = document.getElementById('nav-toggle');
-const navClose = document.getElementById('nav-close');
-
+/*=============== THEME TOGGLE ===============*/
 if (themeButton) {
     themeButton.addEventListener('click', () => {
         const nextTheme = document.body.classList.contains('light-theme') ? 'dark' : 'light';
@@ -37,18 +33,6 @@ if (themeButton) {
         localStorage.setItem('portfolio-theme', nextTheme);
     });
 }
-
-if (navToggle) {
-    navToggle.addEventListener('click', () => navMenu.classList.add('show-menu'));
-}
-if (navClose) {
-    navClose.addEventListener('click', () => navMenu.classList.remove('show-menu'));
-}
-
-/*=============== REMOVE MENU MOBILE ===============*/
-document.querySelectorAll('.nav-link').forEach(n =>
-    n.addEventListener('click', () => document.getElementById('nav-menu').classList.remove('show-menu'))
-);
 
 /*=============== BLUR HEADER ON SCROLL ===============*/
 window.addEventListener('scroll', () => {
