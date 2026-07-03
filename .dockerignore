@@ -1,0 +1,25 @@
+.git
+.gitignore
+.dockerignore
+.env.local
+.env.*.local
+.phpunit.cache
+phpunit.xml
+
+# Symfony generated
+/var/
+/public/assets/
+/public/bundles/
+/assets/vendor/
+
+# Dependencies (reinstalled in Docker)
+/vendor/
+
+# Dev tools
+/.vscode/
+/.idea/
+.DS_Store
+Thumbs.db
+
+# Claude
+/.claude/

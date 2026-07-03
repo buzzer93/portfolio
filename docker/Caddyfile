@@ -1,0 +1,18 @@
+{
+	frankenphp
+	order php_server before file_server
+}
+
+{$SERVER_NAME:localhost} {
+	root * /app/public
+
+	encode zstd br gzip
+
+	header {
+		X-Frame-Options "SAMEORIGIN"
+		X-Content-Type-Options "nosniff"
+		X-XSS-Protection "1; mode=block"
+	}
+
+	php_server
+}
