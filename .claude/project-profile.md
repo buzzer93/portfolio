@@ -11,7 +11,7 @@ Main users: Visiteurs, recruteurs (public) — Nicolas Rodriguez (admin)
 ## Stack
 
 PHP version: 8.4
-Symfony version: 8.0
+Symfony version: 8.1
 Database: SQLite (dev) — à confirmer pour production (MariaDB ou SQLite)
 Frontend CSS: Tailwind CSS v4 (`@import "tailwindcss"`) via `symfonycasts/tailwind-bundle` + variables CSS custom
 Frontend JS: Stimulus (2 controllers), Turbo, ScrollReveal, Vanilla JS
@@ -128,10 +128,10 @@ Migration policy: migrations Doctrine dans `migrations/`
 
 ## Deployment
 
-Deployment target: VPS / hébergement
-Web server: Apache ou Nginx (pointer sur `public/`)
-PHP runtime: PHP 8.4 FPM
-Database: à confirmer
+Deployment target: VPS lab (Ubuntu 24.04)
+Web server: FrankenPHP (Caddy intégré) via Docker
+PHP runtime: PHP 8.4 (image dunglas/frankenphp:php8.4-alpine)
+Database: SQLite (volume Docker var_data)
 
 Production domain: nicolas-rodriguez.fr
 

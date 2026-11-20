@@ -1,27 +1,37 @@
 #!/usr/bin/env bash
 #
-# Script de déploiement du portfolio sur lab (FrankenPHP + Docker).
+# Script de déploiement du portfolio sur lab (PHP-FPM hôte, sans Docker).
 #
 # Idempotent : peut être relancé sans danger.
 # À lancer manuellement en SSH sur le serveur :
 #
 #   cd /opt/nicolas-rodriguez && bash bin/deploy.sh
 #
-# Pré-requis : docker (plugin compose), git.
-# Variables de prod dans .env.local ou exportées avant l'appel :
-#   SERVER_NAME, APP_SECRET, MAILER_*, ADMIN_EMAIL, ADMIN_PASSWORD
+# Pré-requis : git, composer, php8.4, PHP-FPM (pool php8.4-portfolio).
+# Pour le reload OPcache : ajouter dans sudoers (visudo) :
+#   buzzer93 ALL=(ALL) NOPASSWD: /usr/bin/systemctl reload php8.4-fpm
 #
-# Note : public/files/ (PDFs CV/lettre) n'est PAS un volume Docker.
-# Tout fichier uploadé via l'admin dans public/files/ est perdu au prochain rebuild.
-# → Committer les PDFs dans git ou ajouter un volume public_files dans docker-compose.yml.
+# Note : docker-compose.yml dans ce dépôt est réservé au développement local.
+# La production est servie par le PHP-FPM hôte du VPS.
 
 set -euo pipefail
 
 DEPLOY_PATH="${DEPLOY_PATH:-/opt/nicolas-rodriguez}"
 DEPLOY_BRANCH="${DEPLOY_BRANCH:-master}"
+PHP="php8.4"
+CONSOLE="${PHP} bin/console"
 
 echo "==> Deploying branch '${DEPLOY_BRANCH}' to ${DEPLOY_PATH}"
 cd "${DEPLOY_PATH}"
+
+# public/files/ contient des PDFs (CV, lettre) modifiés côté serveur via l'admin.
+# Ils sont suivis par git : on les sauvegarde avant le pull pour les restaurer après.
+BACKUP_DIR=""
+if [ -d public/files ] && [ -n "$(ls -A public/files 2>/dev/null)" ]; then
+    BACKUP_DIR="${HOME}/portfolio-files-backup-$(date +%Y%m%d-%H%M%S)"
+    echo "==> Backing up public/files → ${BACKUP_DIR}"
+    cp -r public/files "${BACKUP_DIR}"
+fi
 
 if [ "${_DEPLOY_REEXEC:-0}" = "0" ]; then
     echo "==> Updating sources (fast-forward only)"
@@ -31,15 +41,36 @@ if [ "${_DEPLOY_REEXEC:-0}" = "0" ]; then
     exec env _DEPLOY_REEXEC=1 bash "$0"
 fi
 
-echo "==> Building image with fresh base image (PHP 8.4.28+)"
-docker compose build --pull
+if [ -n "${BACKUP_DIR}" ] && [ -d "${BACKUP_DIR}" ]; then
+    echo "==> Restoring public/files from backup"
+    cp -r "${BACKUP_DIR}/." public/files/
+fi
 
-echo "==> Starting containers"
-docker compose up -d --remove-orphans
+echo "==> Installing PHP dependencies (prod)"
+${PHP} $(which composer) install --no-dev --optimize-autoloader --no-interaction --no-progress --no-scripts
+${PHP} $(which composer) dump-autoload --no-dev --optimize --no-scripts
+
+echo "==> Resetting prod cache (before any bin/console call)"
+rm -rf var/cache/prod
+${CONSOLE} cache:warmup --env=prod --no-debug
+
+echo "==> Building front assets"
+${CONSOLE} tailwind:build --minify
+${CONSOLE} asset-map:compile
+
+echo "==> Running database migrations"
+${CONSOLE} doctrine:migrations:migrate --no-interaction
+
+echo "==> Setting permissions (var/ writable by www-data)"
+find var/ -type d -exec chmod 775 {} \;
+find var/ -type f -exec chmod 664 {} \;
+
+echo "==> Reloading PHP-FPM to clear OPcache"
+sudo systemctl reload php8.4-fpm 2>/dev/null \
+    || echo "    (skipped — ajouter une entrée sudoers si nécessaire)"
 
 echo "==> Post-deploy checks"
-docker compose ps --format '{{.Name}}  {{.Status}}'
-docker compose exec -T app php -r 'echo "PHP: ", PHP_VERSION, PHP_EOL;'
+${PHP} -r 'echo "PHP: ", PHP_VERSION, PHP_EOL;'
 curl -fsS -o /dev/null -w "HTTP %{http_code}: %{url_effective}\n" https://nicolas-rodriguez.fr/ \
     || echo "    (curl check failed — vérifier manuellement)"
 
